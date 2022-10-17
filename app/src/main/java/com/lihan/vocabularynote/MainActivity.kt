@@ -10,14 +10,18 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.lihan.vocabularynote.presentations.home.HomeScreen
 import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             VocabularyNoteTheme {
-
+                HomeScreen()
             }
         }
     }
