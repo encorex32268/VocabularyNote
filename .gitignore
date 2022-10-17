@@ -21,28 +21,6 @@ Issues
 Marketplace
 Explore
 
-@encorex32268
-encorex32268
-/
-VocabularyNote
-Public
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-VocabularyNote/.gitignore
-@encorex32268
-encorex32268 Initial commit
-Latest commit 67cd952 17 seconds ago
- History
- 1 contributor
-85 lines (68 sloc)  1.4 KB
-
 # Built application files
 *.apk
 *.aar
