@@ -1,5 +1,6 @@
 package com.lihan.vocabularynote.data.repository
 
+import android.util.Log
 import com.lihan.vocabularynote.core.util.Resource
 import com.lihan.vocabularynote.data.VocabularyNoteDao
 import com.lihan.vocabularynote.domain.model.VocabularyNote
@@ -17,16 +18,23 @@ class VocabularyNoteRepositoryImpl(
         )
     }
 
-    override suspend fun getAllVocabulary(): Flow<Resource<List<VocabularyNote>>> {
+    override suspend fun getAllVocabulary(): Flow<List<VocabularyNote>> {
       return flow {
           // future online ? temp use flow
-          emit(Resource.Loading())
           val data = dao.getAllVocabulary().map { it.toVocabularyNote() }
-          emit(Resource.Success(data))
+          emit(data)
+          Log.d("HomeViewModel", "getAllVocabulary : ${data}")
+
       }
     }
 
     override suspend fun deleteVocabularyNote(noteId : Int ) {
        dao.deleteVocabularyNote(noteId = noteId)
+    }
+
+    override suspend fun getVocabularyNote(noteId : Int): Flow<VocabularyNote> {
+        return flow {
+            emit(dao.getVocabularyNote(noteId = noteId).toVocabularyNote())
+        }
     }
 }

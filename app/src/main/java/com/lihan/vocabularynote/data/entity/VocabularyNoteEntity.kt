@@ -8,7 +8,7 @@ import com.lihan.vocabularynote.domain.model.VocabularyNote
 @Entity
 data class VocabularyNoteEntity(
     @PrimaryKey(autoGenerate = true) val id : Int?=null,
-    val type : String,
+    val type : Int,
     val word : String,
     val hiraganaOrKatakana : String,
     val roma : String,

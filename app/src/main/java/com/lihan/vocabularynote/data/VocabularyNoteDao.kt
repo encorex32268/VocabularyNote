@@ -18,4 +18,7 @@ interface VocabularyNoteDao {
 
     @Query("Delete from VocabularyNoteEntity where id =:noteId")
     suspend fun deleteVocabularyNote(noteId : Int)
+
+    @Query("select * from VocabularyNoteEntity where id =:noteId")
+    suspend fun getVocabularyNote(noteId: Int) : VocabularyNoteEntity
 }

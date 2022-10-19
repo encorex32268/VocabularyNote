@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,7 @@ import org.w3c.dom.Text
 fun VocabularyNoteItem(
     modifier: Modifier = Modifier,
     vocabularyNote: VocabularyNote,
-    onItemClick : (VocabularyNote) -> Unit = {},
+    onItemClick : (Int) -> Unit = {},
     typeCircleSize : Dp = 40.dp,
     noteCardHeight : Dp = 150.dp,
     hiraganaFontSize : TextUnit = 12.sp,
@@ -53,11 +54,12 @@ fun VocabularyNoteItem(
                 cameraDistance = 8 * density
             }
             .clickable {
-                onItemClick(vocabularyNote)
+                onItemClick(vocabularyNote.id)
             }
         ,
         contentAlignment = Alignment.Center
     ) {
+
         Box(
             modifier = Modifier
                 .padding(8.dp)
@@ -104,6 +106,27 @@ fun VocabularyNoteItem(
 
 
         }
+
+//        }
+//    else{
+//            //back
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxSize()
+//                    .padding(4.dp),
+//                verticalArrangement = Arrangement.Center,
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Text(
+//                    text = vocabularyNote.explain,
+//                    fontSize = 16.sp,
+//                    fontWeight = FontWeight.Bold,
+//                )
+//
+//            }
+//
+//
+//        }
 
 
 

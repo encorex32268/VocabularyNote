@@ -1,15 +1,12 @@
 package com.lihan.vocabularynote.domain.use_cases
 
-import com.lihan.vocabularynote.core.util.Resource
 import com.lihan.vocabularynote.domain.model.VocabularyNote
 import com.lihan.vocabularynote.domain.repository.VocabularyNoteRepository
-import kotlinx.coroutines.flow.Flow
 
-class GetVocabularyNotes(
+class InsertEditVocabularyNote(
     private val vocabularyNoteRepository: VocabularyNoteRepository
 ) {
-
-    suspend  operator fun invoke() : Flow<List<VocabularyNote>> {
-        return vocabularyNoteRepository.getAllVocabulary()
+    suspend operator fun invoke(vocabularyNote: VocabularyNote){
+        vocabularyNoteRepository.insert(vocabularyNote)
     }
 }

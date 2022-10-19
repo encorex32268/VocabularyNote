@@ -6,7 +6,7 @@ import androidx.room.Room
 import com.lihan.vocabularynote.data.VocabularyNoteDatabase
 import com.lihan.vocabularynote.data.repository.VocabularyNoteRepositoryImpl
 import com.lihan.vocabularynote.domain.repository.VocabularyNoteRepository
-import com.lihan.vocabularynote.domain.use_cases.GetVocabularyNotes
+import com.lihan.vocabularynote.domain.use_cases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,10 +41,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesGetVocabularyNotes(vocabularyNoteRepository : VocabularyNoteRepository) : GetVocabularyNotes {
-        return GetVocabularyNotes(vocabularyNoteRepository = vocabularyNoteRepository)
+    fun providesVocabularyNoteUseCases(vocabularyNoteRepository: VocabularyNoteRepository) : VocabularyNoteUseCases{
+        return VocabularyNoteUseCases(
+            GetVocabularyNotes(vocabularyNoteRepository = vocabularyNoteRepository),
+            GetVocabularyByNoteId(vocabularyNoteRepository = vocabularyNoteRepository),
+            DeleteVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),
+            InsertEditVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),
+        )
     }
-
 
 
 
