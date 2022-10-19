@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.lihan.vocabularynote.data.entity.VocabularyNoteEntity
 
 data class VocabularyNote(
-    val id : Int ,
+    val id : Int?=null ,
     //color agb save
     val type : Int,
     val word : String,

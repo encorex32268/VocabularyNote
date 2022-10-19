@@ -70,7 +70,7 @@ fun InsertEditScreen(
                onMenuItemClick = {
                    when(it.name){
                        MenuID.Delete.id ->{
-                           viewModel.onEvent(InsertEditEvent.Remove)
+                           viewModel.onEvent(InsertEditEvent.Remove(noteId))
                        }
                        else -> {
                            navController.popBackStack()
@@ -121,7 +121,7 @@ fun InsertEditScreen(
                     .padding(16.dp)
                     .size(40.dp)
                     .background(
-                        color = Color(state.type),
+                        color = Color(state.typeColor),
                         shape = CircleShape
                     )
                     .clickable {
@@ -161,7 +161,7 @@ fun InsertEditScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     OutlinedTextField(
-                        value = state.hiraganaOrKatakana,
+                        value = state.hiragana,
                         onValueChange = {
                            viewModel.onEvent(InsertEditEvent.HiraganaChanged(it))
                         },

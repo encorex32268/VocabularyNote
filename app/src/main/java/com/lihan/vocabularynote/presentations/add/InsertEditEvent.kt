@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 sealed class InsertEditEvent{
     data class IsEditPage(val id : Int ) : InsertEditEvent()
-    object Remove : InsertEditEvent()
+    data class Remove(val removeId : Int ) : InsertEditEvent()
     object Save : InsertEditEvent()
     data class TypeColorChanged(val color : Color) : InsertEditEvent()
     data class WordChanged(val word : String) : InsertEditEvent()

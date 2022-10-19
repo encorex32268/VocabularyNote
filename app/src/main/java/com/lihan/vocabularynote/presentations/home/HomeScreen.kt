@@ -1,5 +1,6 @@
 package com.lihan.vocabularynote.presentations.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -43,7 +44,9 @@ fun HomeScreen(
                 items(state.notes){ note ->
                     VocabularyNoteItem(
                         vocabularyNote = note,
-                        onItemClick = { onNavigation(it) }
+                        onItemClick = {
+                            onNavigation(it)
+                        }
                     )
                 }
             }

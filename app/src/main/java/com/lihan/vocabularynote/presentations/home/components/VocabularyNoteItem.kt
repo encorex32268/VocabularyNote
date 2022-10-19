@@ -9,13 +9,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +35,7 @@ fun VocabularyNoteItem(
     hiraganaFontSize : TextUnit = 12.sp,
     wordFontSize : TextUnit = 20.sp
 ) {
-    val rotated by remember {
+    var rotated by remember {
         mutableStateOf(false)
     }
     val rotation by animateFloatAsState(
@@ -46,90 +44,90 @@ fun VocabularyNoteItem(
     )
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .graphicsLayer {
-                rotationY = rotation
-                cameraDistance = 8 * density
-            }
-            .clickable {
-                onItemClick(vocabularyNote.id)
-            }
-        ,
-        contentAlignment = Alignment.Center
-    ) {
-
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-                .size(typeCircleSize)
-                .clip(CircleShape)
-                .background(Color.Green)
-                .align(Alignment.TopStart)
-        )
-        Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
-                .padding(8.dp)
                 .height(noteCardHeight)
+                .padding(16.dp)
+                .shadow(
+                    elevation = 10.dp
+                )
                 .background(
-                    Color.White,
-                    RoundedCornerShape(20.dp)
+                    color = Color.White,
+                    shape = RoundedCornerShape(10.dp)
                 )
-            ,
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .graphicsLayer {
+                    rotationY = rotation
+                    cameraDistance = 8 * density
+                }
+                .clickable {
+                    rotated = !rotated
+                },
+            contentAlignment = Alignment.Center
+
         ) {
-            val isShowSmallHiraganaText =
-                vocabularyNote.hiraganaOrKatakana.isNotBlank() &&
-                        vocabularyNote.word.isNotBlank()
-            if (isShowSmallHiraganaText){
-                Text(
-                    text = vocabularyNote.hiraganaOrKatakana,
-                    fontSize = hiraganaFontSize,
-                    fontWeight = FontWeight.Light
+            if(rotation < 90) {
+                //Front
+                Box(modifier = Modifier
+                    .padding(16.dp)
+                    .size(typeCircleSize)
+                    .background(
+                        color = Color(vocabularyNote.type),
+                        shape = CircleShape
+                    )
+                    .align(Alignment.TopStart)
+                    .clickable {
+                        onItemClick(vocabularyNote.id!!)
+                    }
                 )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = vocabularyNote.word,
-                    fontSize = wordFontSize,
-                    fontWeight = FontWeight.Bold
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    val isShowSmallHiraganaText =
+                        vocabularyNote.hiraganaOrKatakana.isNotBlank() &&
+                                vocabularyNote.word.isNotBlank()
+                    if (isShowSmallHiraganaText) {
+                        Text(
+                            text = vocabularyNote.hiraganaOrKatakana,
+                            fontSize = hiraganaFontSize,
+                            fontWeight = FontWeight.Light
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = vocabularyNote.word,
+                            fontSize = wordFontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    } else {
+                        Text(
+                            text = vocabularyNote.hiraganaOrKatakana,
+                            fontSize = hiraganaFontSize,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
             }else{
-                Text(
-                    text = vocabularyNote.hiraganaOrKatakana,
-                    fontSize = hiraganaFontSize,
-                    fontWeight = FontWeight.Bold
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .graphicsLayer {
+                             rotationY = 180f
+                        }
+                    ,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        text = vocabularyNote.explain,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
-
-
-        }
-
-//        }
-//    else{
-//            //back
-//            Column(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(4.dp),
-//                verticalArrangement = Arrangement.Center,
-//                horizontalAlignment = Alignment.CenterHorizontally
-//            ) {
-//                Text(
-//                    text = vocabularyNote.explain,
-//                    fontSize = 16.sp,
-//                    fontWeight = FontWeight.Bold,
-//                )
-//
-//            }
-//
-//
-//        }
-
-
-
 
     }
 

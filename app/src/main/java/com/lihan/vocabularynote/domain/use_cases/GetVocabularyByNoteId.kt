@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class GetVocabularyByNoteId(
     private val vocabularyNoteRepository: VocabularyNoteRepository
 ) {
-    suspend operator fun invoke(noteId : Int ) : Flow<VocabularyNote> {
+    operator fun invoke(noteId : Int ) : Flow<VocabularyNote> {
         return vocabularyNoteRepository.getVocabularyNote(noteId)
     }
 }

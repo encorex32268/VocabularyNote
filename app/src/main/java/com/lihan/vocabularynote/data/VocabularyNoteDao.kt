@@ -6,6 +6,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.lihan.vocabularynote.data.entity.VocabularyNoteEntity
+import com.lihan.vocabularynote.domain.model.VocabularyNote
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface VocabularyNoteDao {
@@ -14,11 +16,11 @@ interface VocabularyNoteDao {
     suspend fun insert(vocabularyNoteEntity: VocabularyNoteEntity)
 
     @Query("select * from VocabularyNoteEntity")
-    suspend fun getAllVocabulary() : List<VocabularyNoteEntity>
+    fun getAllVocabulary() : Flow<List<VocabularyNoteEntity>>
 
-    @Query("Delete from VocabularyNoteEntity where id =:noteId")
-    suspend fun deleteVocabularyNote(noteId : Int)
+    @Delete
+    suspend fun deleteVocabularyNote(vocabularyNoteEntity: VocabularyNoteEntity)
 
     @Query("select * from VocabularyNoteEntity where id =:noteId")
-    suspend fun getVocabularyNote(noteId: Int) : VocabularyNoteEntity
+    fun getVocabularyNote(noteId: Int) : Flow<VocabularyNoteEntity>
 }
