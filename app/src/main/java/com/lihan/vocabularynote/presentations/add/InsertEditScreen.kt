@@ -71,6 +71,7 @@ fun InsertEditScreen(
                    when(it.name){
                        MenuID.Delete.id ->{
                            viewModel.onEvent(InsertEditEvent.Remove(noteId))
+                           navController.popBackStack()
                        }
                        else -> {
                            navController.popBackStack()

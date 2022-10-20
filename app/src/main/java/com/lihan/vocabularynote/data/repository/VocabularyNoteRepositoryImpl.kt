@@ -18,18 +18,18 @@ class VocabularyNoteRepositoryImpl(
     }
 
     override fun getAllVocabulary(): Flow<List<VocabularyNote>> {
-      return dao.getAllVocabulary().map {
-          it.map { note-> note.toVocabularyNote()
-          }
+        return dao.getAllVocabulary().map { it.map {
+                note -> note.toVocabularyNote()
+        }
       }
+
     }
 
-    override suspend fun deleteVocabularyNote(vocabularyNote : VocabularyNote ) {
-       dao.deleteVocabularyNote(
-           vocabularyNoteEntity = vocabularyNote.toVocabularyNoteEntity().copy(id = vocabularyNote.id))
+    override suspend fun deleteVocabularyNote(noteId : Int ) {
+        dao.deleteVocabularyNote(noteId)
     }
 
-    override fun getVocabularyNote(noteId : Int): Flow<VocabularyNote> {
-        return dao.getVocabularyNote(noteId = noteId).map { it.toVocabularyNote() }
+    override suspend fun getVocabularyNote(noteId : Int): VocabularyNote? {
+        return dao.getVocabularyNote(noteId = noteId)?.toVocabularyNote()
     }
 }

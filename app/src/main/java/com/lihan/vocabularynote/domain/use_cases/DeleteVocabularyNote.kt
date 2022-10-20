@@ -6,7 +6,7 @@ import com.lihan.vocabularynote.domain.repository.VocabularyNoteRepository
 class DeleteVocabularyNote(
     private val vocabularyNoteRepository: VocabularyNoteRepository
 ) {
-    suspend operator fun invoke(vocabularyNote: VocabularyNote) {
-        vocabularyNoteRepository.deleteVocabularyNote(vocabularyNote)
+    suspend operator fun invoke(noteId : Int) {
+        vocabularyNoteRepository.deleteVocabularyNote(noteId)
     }
 }

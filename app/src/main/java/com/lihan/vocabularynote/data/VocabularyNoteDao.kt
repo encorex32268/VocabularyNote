@@ -18,9 +18,9 @@ interface VocabularyNoteDao {
     @Query("select * from VocabularyNoteEntity")
     fun getAllVocabulary() : Flow<List<VocabularyNoteEntity>>
 
-    @Delete
-    suspend fun deleteVocabularyNote(vocabularyNoteEntity: VocabularyNoteEntity)
+    @Query("delete from VocabularyNoteEntity where id = :noteId")
+    suspend fun deleteVocabularyNote(noteId : Int)
 
-    @Query("select * from VocabularyNoteEntity where id =:noteId")
-    fun getVocabularyNote(noteId: Int) : Flow<VocabularyNoteEntity>
+    @Query("select * from VocabularyNoteEntity where id = :noteId")
+    suspend fun getVocabularyNote(noteId: Int) : VocabularyNoteEntity?
 }

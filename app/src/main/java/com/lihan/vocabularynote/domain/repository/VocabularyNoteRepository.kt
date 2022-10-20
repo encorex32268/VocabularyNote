@@ -11,7 +11,7 @@ interface VocabularyNoteRepository {
 
     fun getAllVocabulary() : Flow<List<VocabularyNote>>
 
-    suspend fun deleteVocabularyNote(vocabularyNote : VocabularyNote)
+    suspend fun deleteVocabularyNote(noteId : Int)
 
-    fun getVocabularyNote(noteId : Int ) : Flow<VocabularyNote>
+    suspend fun getVocabularyNote(noteId : Int ) : VocabularyNote?
 }

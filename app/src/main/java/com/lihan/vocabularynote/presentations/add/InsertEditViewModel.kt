@@ -24,22 +24,17 @@ class InsertEditViewModel @Inject constructor(
    private val vocabularyNoteUseCases: VocabularyNoteUseCases
 ) : ViewModel(){
 
-    private var getVocabularyNoteJob: Job? = null
 
 
     var state by  mutableStateOf(InsertEditState())
         private set
 
 
-
-
     fun  onEvent(event : InsertEditEvent){
         when(event){
             is InsertEditEvent.IsEditPage->{
-                getVocabularyNoteJob?.cancel()
-                getVocabularyNoteJob = vocabularyNoteUseCases
-                    .getVocabularyByNoteId(event.id)
-                    .onEach {
+                viewModelScope.launch {
+                    vocabularyNoteUseCases.getVocabularyByNoteId(event.id)?.let {
                         state = state.copy(
                             typeColor =  it.type,
                             word = if (it.word.isEmpty()){
@@ -52,7 +47,10 @@ class InsertEditViewModel @Inject constructor(
                             createDate = it.createDate,
                             explain = it.explain
                         )
-                }.launchIn(viewModelScope)
+                    }
+                }
+
+
             }
             is InsertEditEvent.Save->{
                 viewModelScope.launch {
@@ -71,16 +69,9 @@ class InsertEditViewModel @Inject constructor(
             is InsertEditEvent.Remove->{
                 viewModelScope.launch {
                     vocabularyNoteUseCases.deleteVocabularyNote(
-                        vocabularyNote = VocabularyNote(
-                            id = event.removeId,
-                            type = state.typeColor,
-                            word = state.word,
-                            hiraganaOrKatakana = state.hiragana,
-                            roma = state.roma,
-                            createDate = state.createDate,
-                            explain = state.explain
-                        )
+                        noteId = event.removeId
                     )
+
                 }
             }
             is InsertEditEvent.TypeColorChanged->{
