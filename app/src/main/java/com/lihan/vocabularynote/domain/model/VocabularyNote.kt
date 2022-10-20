@@ -12,7 +12,7 @@ data class VocabularyNote(
     val roma : String,
     val createDate : Long,
     val explain : String
-) {
+    ) {
     companion object{
         val typeColors = listOf<Color>(
             Color(252,46,4),
@@ -28,6 +28,7 @@ data class VocabularyNote(
 
     fun toVocabularyNoteEntity(): VocabularyNoteEntity {
         return VocabularyNoteEntity(
+            id = id,
             type = type,
             word = word,
             hiraganaOrKatakana = hiraganaOrKatakana,

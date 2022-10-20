@@ -29,18 +29,23 @@ import com.lihan.vocabularynote.domain.model.VocabularyNote
 @Composable
 fun InsertEditScreen(
     modifier: Modifier = Modifier,
-    noteId: Int = 1,
+    noteId: Int = -1,
     navController: NavController,
     viewModel : InsertEditViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
+
     var isEditPage by remember {
         mutableStateOf(false)
     }
-    if (noteId != -1){
-        isEditPage = true
-        viewModel.onEvent(InsertEditEvent.IsEditPage(noteId))
+
+    LaunchedEffect(key1 = noteId){
+        if (noteId != -1){
+            isEditPage = true
+            viewModel.onEvent(InsertEditEvent.IsEditPage(noteId))
+        }
     }
+
+    val state = viewModel.state
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -122,7 +127,7 @@ fun InsertEditScreen(
                     .padding(16.dp)
                     .size(40.dp)
                     .background(
-                        color = Color(state.typeColor),
+                        color = Color(state.type),
                         shape = CircleShape
                     )
                     .clickable {
@@ -162,7 +167,7 @@ fun InsertEditScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     OutlinedTextField(
-                        value = state.hiragana,
+                        value = state.hiraganaOrKatakana,
                         onValueChange = {
                            viewModel.onEvent(InsertEditEvent.HiraganaChanged(it))
                         },

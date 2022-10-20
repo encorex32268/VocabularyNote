@@ -24,23 +24,36 @@ class InsertEditViewModel @Inject constructor(
    private val vocabularyNoteUseCases: VocabularyNoteUseCases
 ) : ViewModel(){
 
+    private var currentNoteId: Int? = null
 
 
-    var state by  mutableStateOf(InsertEditState())
+    var state by  mutableStateOf(
+        VocabularyNote(
+            id = currentNoteId,
+            type = VocabularyNote.typeColors.random().toArgb(),
+            word = "",
+            hiraganaOrKatakana = "",
+            roma = "",
+            createDate = System.currentTimeMillis(),
+            explain = ""
+        )
+    )
         private set
+
 
 
     fun  onEvent(event : InsertEditEvent){
         when(event){
             is InsertEditEvent.IsEditPage->{
                 viewModelScope.launch {
+                    currentNoteId = event.id
                     vocabularyNoteUseCases.getVocabularyByNoteId(event.id)?.let {
                         state = state.copy(
-                            typeColor =  it.type,
+                            type =  it.type,
                             word = if (it.word.isEmpty()){
                                 it.hiraganaOrKatakana
                             }else{ it.word },
-                            hiragana = if (it.word.isNotEmpty()){
+                            hiraganaOrKatakana = if (it.word.isNotEmpty()){
                                 it.hiraganaOrKatakana
                             }else{ "" },
                             roma = it.roma,
@@ -56,9 +69,10 @@ class InsertEditViewModel @Inject constructor(
                 viewModelScope.launch {
                     vocabularyNoteUseCases.insertEditVocabularyNote(
                         vocabularyNote = VocabularyNote(
-                            type = state.typeColor,
+                            id = currentNoteId,
+                            type = state.type,
                             word = state.word,
-                            hiraganaOrKatakana = state.hiragana,
+                            hiraganaOrKatakana = state.hiraganaOrKatakana,
                             roma = state.roma,
                             createDate = state.createDate,
                             explain = state.explain
@@ -76,7 +90,7 @@ class InsertEditViewModel @Inject constructor(
             }
             is InsertEditEvent.TypeColorChanged->{
                 state = state.copy(
-                    typeColor = event.color.toArgb()
+                    type = event.color.toArgb()
                 )
             }
             is InsertEditEvent.WordChanged->{
@@ -86,7 +100,7 @@ class InsertEditViewModel @Inject constructor(
             }
             is InsertEditEvent.HiraganaChanged->{
                 state = state.copy(
-                    hiragana = event.hiragana
+                    hiraganaOrKatakana = event.hiragana
                 )
             }
             is InsertEditEvent.ExplainChanged->{
