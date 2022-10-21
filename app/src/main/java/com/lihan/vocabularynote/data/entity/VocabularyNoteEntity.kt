@@ -15,17 +15,4 @@ data class VocabularyNoteEntity(
     val roma : String,
     val createDate : Long,
     val explain : String
-){
-
-    fun toVocabularyNote() : VocabularyNote{
-        return VocabularyNote(
-            id = id?:0,
-            type = type,
-            word = word,
-            hiraganaOrKatakana = hiraganaOrKatakana,
-            roma =roma,
-            createDate = createDate,
-            explain = explain
-        )
-    }
-}
+)

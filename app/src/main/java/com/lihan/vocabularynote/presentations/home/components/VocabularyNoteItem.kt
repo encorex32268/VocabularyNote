@@ -32,8 +32,9 @@ fun VocabularyNoteItem(
     onItemClick : (Int) -> Unit = {},
     typeCircleSize : Dp = 40.dp,
     noteCardHeight : Dp = 150.dp,
-    hiraganaFontSize : TextUnit = 12.sp,
-    wordFontSize : TextUnit = 20.sp
+    hiraganaFontSize : TextUnit = 16.sp,
+    wordFontSize : TextUnit = 30.sp,
+    explainFontSize : TextUnit = 18.sp
 ) {
     var rotated by remember {
         mutableStateOf(false)
@@ -123,7 +124,7 @@ fun VocabularyNoteItem(
                     Text(
                         modifier = Modifier.padding(16.dp),
                         text = vocabularyNote.explain,
-                        fontSize = 16.sp,
+                        fontSize = explainFontSize,
                         fontWeight = FontWeight.Bold
                     )
                 }

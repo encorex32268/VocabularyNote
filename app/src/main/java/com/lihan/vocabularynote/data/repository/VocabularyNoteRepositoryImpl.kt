@@ -3,6 +3,8 @@ package com.lihan.vocabularynote.data.repository
 import android.util.Log
 import com.lihan.vocabularynote.core.util.Resource
 import com.lihan.vocabularynote.data.VocabularyNoteDao
+import com.lihan.vocabularynote.data.toVocabularyEntity
+import com.lihan.vocabularynote.data.toVocabularyNote
 import com.lihan.vocabularynote.domain.model.VocabularyNote
 import com.lihan.vocabularynote.domain.repository.VocabularyNoteRepository
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +16,7 @@ class VocabularyNoteRepositoryImpl(
 )  : VocabularyNoteRepository{
 
     override suspend fun insert(vocabularyNote: VocabularyNote) {
-        dao.insert(vocabularyNoteEntity =vocabularyNote.toVocabularyNoteEntity())
+        dao.insert(vocabularyNoteEntity =vocabularyNote.toVocabularyEntity())
     }
 
     override fun getAllVocabulary(): Flow<List<VocabularyNote>> {

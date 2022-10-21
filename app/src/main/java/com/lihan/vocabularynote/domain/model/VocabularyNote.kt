@@ -25,18 +25,4 @@ data class VocabularyNote(
 
         )
     }
-
-    fun toVocabularyNoteEntity(): VocabularyNoteEntity {
-        return VocabularyNoteEntity(
-            id = id,
-            type = type,
-            word = word,
-            hiraganaOrKatakana = hiraganaOrKatakana,
-            roma = roma,
-            createDate = createDate,
-            explain = explain
-        )
-    }
-
-
 }

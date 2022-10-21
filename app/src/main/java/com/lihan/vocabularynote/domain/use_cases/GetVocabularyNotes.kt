@@ -11,6 +11,10 @@ class GetVocabularyNotes(
 ) {
 
     operator fun invoke() : Flow<List<VocabularyNote>> {
-        return vocabularyNoteRepository.getAllVocabulary()
+        return vocabularyNoteRepository.getAllVocabulary().map {
+            it.sortedByDescending { note ->
+                note.createDate
+            }
+        }
     }
 }
