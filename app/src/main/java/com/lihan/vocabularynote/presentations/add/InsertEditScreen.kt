@@ -104,6 +104,7 @@ fun InsertEditScreen(
                 IconButton(
                     modifier = Modifier.align(Alignment.TopEnd),onClick = {
                         viewModel.onEvent(InsertEditEvent.Remove(noteId))
+                        navController.popBackStack()
                     }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
