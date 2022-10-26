@@ -8,6 +8,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun VocabularyNoteAppBar(
@@ -17,6 +18,7 @@ fun VocabularyNoteAppBar(
     onNavigationBack : () -> Unit
 ) {
     TopAppBar(
+        backgroundColor = Color.White,
         title = {
             Text(text = title)
         },
@@ -31,6 +33,7 @@ fun VocabularyNoteAppBar(
                         Icon(
                             imageVector = it.icon,
                             contentDescription = it.name,
+                            tint = Color.Black
                         )
                     }
 
@@ -47,7 +50,9 @@ fun VocabularyNoteAppBar(
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
-                    contentDescription ="Back"
+                    contentDescription ="Back",
+                    tint = Color.Black
+
                 )
             }
         }

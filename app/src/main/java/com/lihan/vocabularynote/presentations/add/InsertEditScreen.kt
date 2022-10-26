@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
@@ -65,41 +66,6 @@ fun InsertEditScreen(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = {
-           VocabularyNoteAppBar(
-               onNavigationBack = {
-                   navController.popBackStack()
-               },
-               menuItems =
-                 if (!isEditPage){
-                     listOf(
-                         MenuItem(
-                             name = MenuID.Close.id,
-                             icon = Icons.Default.Close
-                         )
-                     )
-                 }else{
-                     listOf(
-                         MenuItem(
-                             name = MenuID.Delete.id,
-                             icon = Icons.Default.Delete
-                         )
-                     )
-                 }
-
-               ,
-               onMenuItemClick = {
-                   when(it.name){
-                       MenuID.Delete.id ->{
-                           viewModel.onEvent(InsertEditEvent.Remove(noteId))
-                           navController.popBackStack()
-                       }
-                       else -> {
-                           navController.popBackStack()
-                       }
-                   }
-               })
-        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
@@ -114,154 +80,195 @@ fun InsertEditScreen(
             }
         }
     ) {
-
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .pointerInput(LocalContext.current) {
-                      detectTapGestures {
-                          focusManager.clearFocus()
-                      }
-                },
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-
-            var expanded by remember {
-                mutableStateOf(false)
+        Box(modifier = modifier
+            .fillMaxSize()
+            .padding(8.dp)
+            .pointerInput(LocalContext.current) {
+                detectTapGestures {
+                    focusManager.clearFocus()
+                }
             }
 
-            Box(
+        ){
+
+            IconButton(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(8.dp)
-                    .shadow(
-                        elevation = 10.dp
-                    )
-                    .background(
-                        color = Color.White,
-                        shape = RoundedCornerShape(10.dp)
-                    )
+                    .align(Alignment.TopStart),
+                onClick = { navController.popBackStack() }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "BackButton")
+            }
+            if (isEditPage){
+                IconButton(
+                    modifier = Modifier.align(Alignment.TopEnd),onClick = {
+                        viewModel.onEvent(InsertEditEvent.Remove(noteId))
+                    }) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete Button")
+                }
+            }else{
+                IconButton(
+                    modifier = Modifier.align(Alignment.TopEnd),onClick = {
+                        navController.popBackStack()
+                    }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "CloseButton")
+                }
+            }
+
+
+
+
+            Column(
+                modifier = modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
 
-                Box(modifier = Modifier
-                    .padding(16.dp)
-                    .size(40.dp)
-                    .background(
-                        color = Color(state.type),
-                        shape = CircleShape
-                    )
-                    .clickable {
-                        expanded = !expanded
-                    }
-                    .align(Alignment.TopStart)
+                var expanded by remember {
+                    mutableStateOf(false)
+                }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(8.dp)
+                        .shadow(
+                            elevation = 10.dp
+                        )
+                        .background(
+                            color = Color.White,
+                            shape = RoundedCornerShape(10.dp)
+                        )
                 ) {
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
+
+                    Box(modifier = Modifier
+                        .padding(16.dp)
+                        .size(40.dp)
+                        .background(
+                            color = Color(state.type),
+                            shape = CircleShape
+                        )
+                        .clickable {
+                            expanded = !expanded
+                        }
+                        .align(Alignment.TopStart)
                     ) {
-                        VocabularyNote.typeColors.forEach { color ->
-                            DropdownMenuItem(
-                                onClick = {
-                                    viewModel.onEvent(InsertEditEvent.TypeColorChanged(color))
-                                    expanded = false
-                                }) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .background(
-                                            color = color,
-                                            shape = CircleShape
-                                        )
-                                )
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false }
+                        ) {
+                            VocabularyNote.typeColors.forEach { color ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        viewModel.onEvent(InsertEditEvent.TypeColorChanged(color))
+                                        expanded = false
+                                    }) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .background(
+                                                color = color,
+                                                shape = CircleShape
+                                            )
+                                    )
+                                }
+
                             }
 
                         }
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 60.dp, top = 16.dp, end = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        OutlinedTextField(
+                            modifier = Modifier
+                                .focusRequester(focusRequester)
+                                .focusOrder(first) {
+                                    down = second
+                                }
+                            ,
+                            value = state.hiraganaOrKatakana,
+                            onValueChange = {
+                                viewModel.onEvent(InsertEditEvent.HiraganaChanged(it))
+                            },
+                            label = { Text(text = "Phonetics") },
+                            singleLine = true,
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                }
+                            )
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        OutlinedTextField(
+                            modifier = Modifier.focusOrder(second){
+                                down = third
+                            },
+                            value = state.word,
+                            onValueChange = {
+                                viewModel.onEvent(InsertEditEvent.WordChanged(it))
+                            },
+                            label = { Text(text = "Word") },
+                            singleLine = true,
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    focusManager.moveFocus(FocusDirection.Down)
+                                }
+                            )
+                        )
 
                     }
+
+
                 }
-                Column(
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 60.dp, top = 16.dp, end = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                        .height(200.dp)
+                        .padding(8.dp)
+                        .shadow(
+                            elevation = 10.dp
+                        )
+                        .background(
+                            color = Color.White,
+                            shape = RoundedCornerShape(10.dp)
+                        )
                 ) {
                     OutlinedTextField(
                         modifier = Modifier
-                            .focusRequester(focusRequester)
-                            .focusOrder(first) {
-                                down = second
-                            }
+                            .fillMaxSize()
+                            .padding(16.dp)
+                            .focusOrder(third)
                         ,
-                        value = state.hiraganaOrKatakana,
+                        value = state.explain,
                         onValueChange = {
-                           viewModel.onEvent(InsertEditEvent.HiraganaChanged(it))
+                            viewModel.onEvent(InsertEditEvent.ExplainChanged(it))
                         },
-                        label = { Text(text = "Phonetics") },
-                        singleLine = true,
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                focusManager.moveFocus(FocusDirection.Down)
-                            }
-                        )
+                        label = { Text(text = "Explain") }
                     )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    OutlinedTextField(
-                        modifier = Modifier.focusOrder(second){
-                            down = third
-                        },
-                        value = state.word,
-                        onValueChange = {
-                            viewModel.onEvent(InsertEditEvent.WordChanged(it))
-                        },
-                        label = { Text(text = "Word") },
-                        singleLine = true,
-                        keyboardActions = KeyboardActions(
-                            onDone = {
-                                focusManager.moveFocus(FocusDirection.Down)
-                            }
-                        )
-                    )
+
 
                 }
-
-
-            }
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(8.dp)
-                    .shadow(
-                        elevation = 10.dp
-                    )
-                    .background(
-                        color = Color.White,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .focusOrder(third)
-                    ,
-                    value = state.explain,
-                    onValueChange = {
-                        viewModel.onEvent(InsertEditEvent.ExplainChanged(it))
-                    },
-                    label = { Text(text = "Explain") }
-                )
-
 
             }
 
         }
+
+
 
     }
 
