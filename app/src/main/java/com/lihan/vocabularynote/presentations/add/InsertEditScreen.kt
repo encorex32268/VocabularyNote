@@ -34,6 +34,7 @@ import androidx.navigation.NavController
 import com.lihan.vocabularynote.core.componets.appbar.MenuID
 import com.lihan.vocabularynote.core.componets.appbar.MenuItem
 import com.lihan.vocabularynote.core.componets.appbar.VocabularyNoteAppBar
+import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.domain.model.VocabularyNote
 
 
@@ -45,6 +46,7 @@ fun InsertEditScreen(
     navController: NavController,
     viewModel : InsertEditViewModel = hiltViewModel()
 ) {
+    val spacer = LocalSpacing.current
 
     var isEditPage by remember {
         mutableStateOf(false)
@@ -84,7 +86,7 @@ fun InsertEditScreen(
     ) {
         Box(modifier = modifier
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(spacer.spaceSmall)
             .pointerInput(LocalContext.current) {
                 detectTapGestures {
                     focusManager.clearFocus()
@@ -141,7 +143,7 @@ fun InsertEditScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .padding(8.dp)
+                        .padding(spacer.spaceMedium)
                         .shadow(
                             elevation = 10.dp
                         )
@@ -152,7 +154,7 @@ fun InsertEditScreen(
                 ) {
 
                     Box(modifier = Modifier
-                        .padding(16.dp)
+                        .padding(spacer.spaceSmall)
                         .size(40.dp)
                         .background(
                             color = Color(state.type),
@@ -190,7 +192,10 @@ fun InsertEditScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 60.dp, top = 16.dp, end = 16.dp),
+                            .padding(
+                                start = spacer.spaceExtraLarge,
+                                top = spacer.spaceMedium,
+                                end = spacer.spaceMedium,),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -242,7 +247,7 @@ fun InsertEditScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
-                        .padding(8.dp)
+                        .padding(spacer.spaceMedium)
                         .shadow(
                             elevation = 10.dp
                         )
@@ -254,7 +259,7 @@ fun InsertEditScreen(
                     OutlinedTextField(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(16.dp)
+                            .padding(spacer.spaceMedium)
                             .focusOrder(third)
                         ,
                         value = state.explain,

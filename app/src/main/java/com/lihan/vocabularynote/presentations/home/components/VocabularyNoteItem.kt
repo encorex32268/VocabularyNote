@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.domain.model.VocabularyNote
 import org.w3c.dom.Text
 
@@ -36,6 +37,7 @@ fun VocabularyNoteItem(
     wordFontSize : TextUnit = 30.sp,
     explainFontSize : TextUnit = 18.sp
 ) {
+    val spacer = LocalSpacing.current
     var rotated by remember {
         mutableStateOf(false)
     }
@@ -48,7 +50,7 @@ fun VocabularyNoteItem(
             modifier = modifier
                 .fillMaxWidth()
                 .height(noteCardHeight)
-                .padding(16.dp)
+                .padding(spacer.spaceMedium)
                 .shadow(
                     elevation = 10.dp
                 )
@@ -69,7 +71,7 @@ fun VocabularyNoteItem(
             if(rotation < 90) {
                 //Front
                 Box(modifier = Modifier
-                    .padding(16.dp)
+                    .padding(spacer.spaceMedium)
                     .size(typeCircleSize)
                     .background(
                         color = Color(vocabularyNote.type),
@@ -95,7 +97,7 @@ fun VocabularyNoteItem(
                             fontSize = hiraganaFontSize,
                             fontWeight = FontWeight.Light
                         )
-                        Spacer(modifier = Modifier.height(2.dp))
+                        Spacer(modifier = Modifier.height(spacer.spaceExtraTooSmall))
                         Text(
                             text = vocabularyNote.word,
                             fontSize = wordFontSize,
@@ -122,7 +124,7 @@ fun VocabularyNoteItem(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier.padding(spacer.spaceMedium),
                         text = vocabularyNote.explain,
                         fontSize = explainFontSize,
                         fontWeight = FontWeight.Bold

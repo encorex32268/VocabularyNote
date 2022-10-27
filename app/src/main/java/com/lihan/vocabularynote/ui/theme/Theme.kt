@@ -5,6 +5,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import com.lihan.vocabularynote.core.ui.Dimensions
+import com.lihan.vocabularynote.core.ui.LocalSpacing
 
 private val DarkColorPalette = darkColors(
     primary = Blue200,
@@ -37,11 +40,13 @@ fun VocabularyNoteTheme(
     } else {
         LightColorPalette
     }
+    CompositionLocalProvider(LocalSpacing provides Dimensions()) {
+        MaterialTheme(
+            colors = colors,
+            typography = Typography,
+            shapes = Shapes,
+            content = content
+        )
+    }
 
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
 }
