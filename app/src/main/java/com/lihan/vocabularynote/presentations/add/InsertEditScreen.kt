@@ -58,6 +58,8 @@ fun InsertEditScreen(
         if (noteId != -1){
             isEditPage = true
             viewModel.onEvent(InsertEditEvent.IsEditPage(noteId))
+        }else{
+            viewModel.onEvent(InsertEditEvent.IsAddPage)
         }
         focusRequester.requestFocus()
     }

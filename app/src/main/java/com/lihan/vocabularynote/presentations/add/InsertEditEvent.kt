@@ -10,6 +10,7 @@ sealed class InsertEditEvent{
     data class WordChanged(val word : String) : InsertEditEvent()
     data class HiraganaChanged(val hiragana : String) : InsertEditEvent()
     data class ExplainChanged(val explain : String) : InsertEditEvent()
+    object IsAddPage : InsertEditEvent()
 
 
 }

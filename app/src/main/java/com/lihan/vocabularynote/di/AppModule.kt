@@ -2,9 +2,12 @@ package com.lihan.vocabularynote.di
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import com.lihan.vocabularynote.data.VocabularyNoteDatabase
+import com.lihan.vocabularynote.data.preferences.DefaultPreferences
 import com.lihan.vocabularynote.data.repository.VocabularyNoteRepositoryImpl
+import com.lihan.vocabularynote.domain.repository.Preferences
 import com.lihan.vocabularynote.domain.repository.VocabularyNoteRepository
 import com.lihan.vocabularynote.domain.use_cases.*
 import dagger.Module
@@ -48,6 +51,18 @@ object AppModule {
             DeleteVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),
             InsertEditVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),
         )
+    }
+
+    @Provides
+    @Singleton
+    fun providesSharedPreferences(@ApplicationContext context : Context) : SharedPreferences{
+        return context.getSharedPreferences("user_data",Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    fun providesPreferences(sharedPreferences: SharedPreferences) : Preferences{
+        return DefaultPreferences(sharedPreferences)
     }
 
 

@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.vocabularynote.data.preferences.DefaultPreferences
 import com.lihan.vocabularynote.domain.model.VocabularyNote
+import com.lihan.vocabularynote.domain.repository.Preferences
 import com.lihan.vocabularynote.domain.use_cases.GetVocabularyByNoteId
 import com.lihan.vocabularynote.domain.use_cases.InsertEditVocabularyNote
 import com.lihan.vocabularynote.domain.use_cases.VocabularyNoteUseCases
@@ -21,16 +24,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InsertEditViewModel @Inject constructor(
-   private val vocabularyNoteUseCases: VocabularyNoteUseCases
+   private val vocabularyNoteUseCases: VocabularyNoteUseCases,
+   private val preferences: Preferences
 ) : ViewModel(){
 
     private var currentNoteId: Int? = null
 
 
+
     var state by  mutableStateOf(
         VocabularyNote(
             id = currentNoteId,
-            type = VocabularyNote.typeColors.random().toArgb(),
+            type =preferences.loadUserColorWhenAdd().toArgb(),
             word = "",
             hiraganaOrKatakana = "",
             roma = "",
@@ -62,8 +67,11 @@ class InsertEditViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+            is InsertEditEvent.IsAddPage->{
+                state = state.copy(
 
-
+                )
             }
             is InsertEditEvent.Save->{
                 viewModelScope.launch {
@@ -92,6 +100,7 @@ class InsertEditViewModel @Inject constructor(
                 state = state.copy(
                     type = event.color.toArgb()
                 )
+                preferences.saveUserColorWhenAdd(event.color)
             }
             is InsertEditEvent.WordChanged->{
                 state = state.copy(
