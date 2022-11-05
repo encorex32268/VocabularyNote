@@ -14,4 +14,15 @@ fun main() {
     print(Color(164,36,244))
     print(Color(148,76,4))
     print(Color(248,116,8))
+
+
+
+    val users = listOf<String>(
+        "Eric" , "Lee" , "Andy"
+    )
+
+    val new = users.filter {
+        it.contains("E")
+    }
+    println(new)
 }
