@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                         ){
-                        val noteId = it.arguments?.getInt("note_id")?:0
+                        val noteId = it.arguments?.getInt("note_id")?:-1
                         InsertEditScreen(
                             noteId = noteId,
                             navController = navController

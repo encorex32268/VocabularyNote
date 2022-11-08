@@ -52,8 +52,28 @@ class HomeViewModel @Inject constructor(
                         )
                     }.launchIn(viewModelScope)
             }
+            is HomeEvent.SearchByString->{
+                getVocabularyNotesJob?.cancel()
+                getVocabularyNotesJob = vocabularyNoteUseCases.getVocabularyNotes.invoke()
+                    .onEach {
+                        state = state.copy(
+                            notes = it.filter { note ->
+                                note.hiraganaOrKatakana.contains(event.string)
+                            },
+                            searchText = event.string
+                        )
+                    }.launchIn(viewModelScope)
+                }
+            is HomeEvent.ChangeHintVisible->{
+                state = state.copy(
+                    isHintVisible = !event.visible && state.searchText.isBlank()
+                )
+            }
+
+
+            }
+
         }
-    }
 
 }
 
