@@ -49,11 +49,13 @@ fun HomeScreen(
         modifier = modifier.fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(onClick = {
+                focusManager.clearFocus()
                 onNavigation(-1)
             }) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Go to Add")
+                    contentDescription = "Go to Add"
+                )
             }
         }
     ) {

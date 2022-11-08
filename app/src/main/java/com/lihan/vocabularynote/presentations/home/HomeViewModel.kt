@@ -58,7 +58,8 @@ class HomeViewModel @Inject constructor(
                     .onEach {
                         state = state.copy(
                             notes = it.filter { note ->
-                                note.hiraganaOrKatakana.contains(event.string)
+                                        note.hiraganaOrKatakana.contains(event.string) ||
+                                        note.word.contains(event.string)
                             },
                             searchText = event.string
                         )
