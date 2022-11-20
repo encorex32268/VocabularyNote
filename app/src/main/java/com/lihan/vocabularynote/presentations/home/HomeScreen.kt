@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Recycling
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.runtime.Composable
@@ -26,19 +27,25 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.domain.model.VocabularyNote
+import com.lihan.vocabularynote.presentations.home.components.MultipleActionItem
+import com.lihan.vocabularynote.presentations.home.components.MultipleFloatingActionButton
 import com.lihan.vocabularynote.presentations.home.components.SearchBar
 import com.lihan.vocabularynote.presentations.home.components.VocabularyNoteItem
+import java.text.SimpleDateFormat
 
 @ExperimentalComposeUiApi
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    onNavigation : (Int) -> Unit
+    onNavigationToAddEdit : (Int) -> Unit,
+    onNavigationToExam : () -> Unit
 ) {
     val spacer = LocalSpacing.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -48,15 +55,30 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                focusManager.clearFocus()
-                onNavigation(-1)
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Go to Add"
-                )
-            }
+            MultipleFloatingActionButton(
+                multipleActionItems = listOf(
+                    MultipleActionItem(
+                        name = Route.ADD_EDIT,
+                        icon = Icons.Default.Add
+                    ),
+                    MultipleActionItem(
+                        name = Route.EXAM,
+                        icon = Icons.Default.List
+                    )
+
+                ),
+                onFloatingButtonClick = {
+                    when(it.name){
+                        Route.EXAM->{
+                            onNavigationToExam()
+                        }
+                        Route.ADD_EDIT->{
+                            focusManager.clearFocus()
+                            onNavigationToAddEdit(-1)
+                        }
+                    }
+                }
+            )
         }
     ) {
         Column (
@@ -132,7 +154,7 @@ fun HomeScreen(
                     VocabularyNoteItem(
                         vocabularyNote = note,
                         onItemClick = {
-                            onNavigation(it)
+                            onNavigationToAddEdit(it)
                         }
                     )
                 }

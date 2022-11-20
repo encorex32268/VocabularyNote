@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.presentations.add.InsertEditScreen
+import com.lihan.vocabularynote.presentations.exam.ExamScreen
 import com.lihan.vocabularynote.presentations.home.HomeScreen
 import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,9 +35,14 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController =  navController, startDestination = Route.HOME){
                     composable(route =Route.HOME){
                         HomeScreen(
-                            onNavigation = {
+                            onNavigationToAddEdit = {
                                 navController.navigate(
                                     route = Route.ADD_EDIT + "/$it"
+                                )
+                            },
+                            onNavigationToExam = {
+                                navController.navigate(
+                                    route = Route.EXAM
                                 )
                             }
                         )
@@ -54,6 +60,11 @@ class MainActivity : ComponentActivity() {
                             noteId = noteId,
                             navController = navController
                         )
+                    }
+                    composable(
+                        route = Route.EXAM
+                    ){
+                        ExamScreen()
                     }
                 }
 

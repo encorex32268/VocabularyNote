@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.lihan.vocabularynote.domain.use_cases.VocabularyNoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -26,44 +27,42 @@ class HomeViewModel @Inject constructor(
         private set
 
     init {
-        onEvent(HomeEvent.GetNotes)
+        getData()
+    }
+
+    private fun getData(){
+        getVocabularyNotesJob?.cancel()
+        getVocabularyNotesJob = vocabularyNoteUseCases.getVocabularyNotes.invoke()
+            .onEach {
+                state = state.copy(
+                    notes = it
+                )
+            }
+            .launchIn(viewModelScope)
+
     }
 
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.GetNotes -> {
-                getVocabularyNotesJob?.cancel()
-                getVocabularyNotesJob = vocabularyNoteUseCases.getVocabularyNotes.invoke()
-                    .onEach {
-                        state = state.copy(
-                            notes = it
-                        )
-                    }.launchIn(viewModelScope)
-
+                getData()
             }
             is HomeEvent.SortByColor->{
-                getVocabularyNotesJob?.cancel()
-                getVocabularyNotesJob = vocabularyNoteUseCases.getVocabularyNotes.invoke()
-                    .onEach {
-                        state = state.copy(
-                            notes = it.filter { note ->
-                                note.type == event.color.toArgb()
-                            }
-                        )
-                    }.launchIn(viewModelScope)
+                val data = state.notes
+                state = state.copy(
+                    notes = data.filter { note ->
+                        note.type == event.color.toArgb()
+                    }
+                )
             }
             is HomeEvent.SearchByString->{
-                getVocabularyNotesJob?.cancel()
-                getVocabularyNotesJob = vocabularyNoteUseCases.getVocabularyNotes.invoke()
-                    .onEach {
-                        state = state.copy(
-                            notes = it.filter { note ->
+                val data = state.notes
+                state = state.copy(
+                   notes = data.filter { note ->
                                         note.hiraganaOrKatakana.contains(event.string) ||
-                                        note.word.contains(event.string)
-                            },
-                            searchText = event.string
-                        )
-                    }.launchIn(viewModelScope)
+                                        note.word.contains(event.string) },
+                  searchText = event.string
+                  )
                 }
             is HomeEvent.ChangeHintVisible->{
                 state = state.copy(
