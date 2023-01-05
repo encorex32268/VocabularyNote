@@ -57,13 +57,22 @@ class HomeViewModel @Inject constructor(
             }
             is HomeEvent.SearchByString->{
                 val data = state.notes
-                state = state.copy(
-                   notes = data.filter { note ->
-                                        note.hiraganaOrKatakana.contains(event.string) ||
-                                        note.word.contains(event.string) },
-                  searchText = event.string
-                  )
+                if (event.string.isNotBlank()){
+                    state = state.copy(
+                        notes = data.filter { note ->
+                            note.hiraganaOrKatakana.contains(event.string) ||
+                                    note.word.contains(event.string) },
+                        searchText = event.string
+                    )
                 }
+                else{
+                    getData()
+                    state = state.copy(
+                        searchText = ""
+                    )
+                }
+            }
+
             is HomeEvent.ChangeHintVisible->{
                 state = state.copy(
                     isHintVisible = !event.visible && state.searchText.isBlank()
