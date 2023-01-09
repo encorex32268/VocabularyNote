@@ -22,18 +22,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.lihan.vocabularynote.core.componets.appbar.MenuID
-import com.lihan.vocabularynote.core.componets.appbar.MenuItem
-import com.lihan.vocabularynote.core.componets.appbar.VocabularyNoteAppBar
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.domain.model.VocabularyNote
 

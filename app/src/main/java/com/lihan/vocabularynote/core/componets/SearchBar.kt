@@ -1,4 +1,4 @@
-package com.lihan.vocabularynote.presentations.home.components
+package com.lihan.vocabularynote.core.componets
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,8 +41,6 @@ fun SearchBar(
     shouldShowHint : Boolean = false,
 ) {
     val spacer = LocalSpacing.current
-
-
     Box(
         modifier = modifier
     ){
