@@ -1,6 +1,5 @@
-package com.lihan.vocabularynote.domain.use_cases
+package com.lihan.vocabularynote.domain.use_cases.vocabulary
 
-import com.lihan.vocabularynote.core.util.Resource
 import com.lihan.vocabularynote.domain.model.VocabularyNote
 import com.lihan.vocabularynote.domain.repository.VocabularyNoteRepository
 import kotlinx.coroutines.flow.Flow

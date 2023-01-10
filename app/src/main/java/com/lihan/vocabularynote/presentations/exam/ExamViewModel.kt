@@ -2,11 +2,10 @@ package com.lihan.vocabularynote.presentations.exam
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lihan.vocabularynote.domain.use_cases.VocabularyNoteUseCases
+import com.lihan.vocabularynote.domain.use_cases.vocabulary.VocabularyNoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch

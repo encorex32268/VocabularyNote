@@ -1,31 +1,23 @@
 package com.lihan.vocabularynote.presentations.add
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lihan.vocabularynote.data.preferences.DefaultPreferences
 import com.lihan.vocabularynote.domain.model.VocabularyNote
 import com.lihan.vocabularynote.domain.repository.Preferences
-import com.lihan.vocabularynote.domain.use_cases.GetVocabularyByNoteId
-import com.lihan.vocabularynote.domain.use_cases.InsertEditVocabularyNote
-import com.lihan.vocabularynote.domain.use_cases.VocabularyNoteUseCases
+import com.lihan.vocabularynote.domain.use_cases.vocabulary.VocabularyNoteUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class InsertEditViewModel @Inject constructor(
-   private val vocabularyNoteUseCases: VocabularyNoteUseCases,
-   private val preferences: Preferences
+    private val vocabularyNoteUseCases: VocabularyNoteUseCases,
+    private val preferences: Preferences
 ) : ViewModel(){
 
     private var currentNoteId: Int? = null

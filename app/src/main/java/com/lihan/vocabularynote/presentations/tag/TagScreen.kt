@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.core.componets.SearchBar
 import com.lihan.vocabularynote.core.componets.TitleText
 import com.lihan.vocabularynote.core.navigation.Route
@@ -32,7 +33,8 @@ import com.lihan.vocabularynote.presentations.tag.components.TagCard
 @ExperimentalFoundationApi
 @Composable
 fun TagScreen(
-    onCloseButtonClicked : () -> Unit
+    onCloseButtonClicked : () -> Unit,
+    viewModel: TagViewModel = hiltViewModel()
 ) {
     val spacer = LocalSpacing.current
     val cardSizeWidth = LocalConfiguration.current.screenWidthDp.dp / 4
@@ -58,18 +60,9 @@ fun TagScreen(
             text = Route.TAG
         )
         Spacer(modifier = Modifier.height(spacer.spaceSmall))
-        // need fix
-        val tags = listOf<Tag>(
-            Tag(name = "N", color = Color.Blue.toArgb()),
-            Tag(name = "Adj", color = Color.Red.toArgb()),
-            Tag(name = "Adv", color = Color.Green.toArgb()),
-            Tag(name = "Na Adj", color = Color.Yellow.toArgb()),
-            Tag(name = "I Adj", color = MaterialTheme.colors.primary.toArgb()),
-            Tag(name = "other", color = MaterialTheme.colors.secondary.toArgb()),
-            Tag(name = "like ", color = MaterialTheme.colors.primaryVariant.toArgb()),
-        )
+
         LazyVerticalGrid(cells = GridCells.Fixed(3)){
-            items(tags){ item->
+            items(viewModel.tagState.tags){ item->
                 TagCard(
                     modifier = Modifier.size(
                         width = cardSizeWidth,

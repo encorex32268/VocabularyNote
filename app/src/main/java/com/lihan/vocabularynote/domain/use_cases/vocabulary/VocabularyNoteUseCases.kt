@@ -1,4 +1,4 @@
-package com.lihan.vocabularynote.domain.use_cases
+package com.lihan.vocabularynote.domain.use_cases.vocabulary
 
 class VocabularyNoteUseCases(
     val getVocabularyNotes: GetVocabularyNotes,

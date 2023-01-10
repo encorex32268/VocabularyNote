@@ -3,6 +3,7 @@ package com.lihan.vocabularynote
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -29,6 +30,7 @@ import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
+@ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
