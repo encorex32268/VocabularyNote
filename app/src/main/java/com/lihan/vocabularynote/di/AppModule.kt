@@ -3,18 +3,19 @@ package com.lihan.vocabularynote.di
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.Room
-import com.lihan.vocabularynote.data.VocabularyNoteDatabase
-import com.lihan.vocabularynote.data.preferences.DefaultPreferences
-import com.lihan.vocabularynote.data.repository.TagRepositoryImpl
-import com.lihan.vocabularynote.data.repository.VocabularyNoteRepositoryImpl
-import com.lihan.vocabularynote.domain.repository.Preferences
-import com.lihan.vocabularynote.domain.repository.TagRepository
-import com.lihan.vocabularynote.domain.repository.VocabularyNoteRepository
+import com.lihan.vocabularynote.feature_allnotes.data.VocabularyNoteDatabase
+import com.lihan.vocabularynote.core.data.preferences.DefaultPreferences
+import com.lihan.vocabularynote.feature_tag.data.repository.TagRepositoryImpl
+import com.lihan.vocabularynote.feature_allnotes.data.repository.VocabularyNoteRepositoryImpl
+import com.lihan.vocabularynote.feature_allnotes.domain.use_cases.*
+import com.lihan.vocabularynote.core.domain.repository.Preferences
+import com.lihan.vocabularynote.feature_tag.domain.repository.TagRepository
+import com.lihan.vocabularynote.feature_allnotes.domain.repository.VocabularyNoteRepository
 import com.lihan.vocabularynote.domain.use_cases.*
-import com.lihan.vocabularynote.domain.use_cases.tag.DeleteTag
-import com.lihan.vocabularynote.domain.use_cases.tag.GetAllTag
-import com.lihan.vocabularynote.domain.use_cases.tag.InsertTag
-import com.lihan.vocabularynote.domain.use_cases.tag.TagUseCases
+import com.lihan.vocabularynote.feature_tag.domain.use_cases.DeleteTag
+import com.lihan.vocabularynote.feature_tag.domain.use_cases.GetAllTag
+import com.lihan.vocabularynote.feature_tag.domain.use_cases.InsertTag
+import com.lihan.vocabularynote.feature_tag.domain.use_cases.TagUseCases
 import com.lihan.vocabularynote.domain.use_cases.vocabulary.*
 import dagger.Module
 import dagger.Provides
@@ -32,7 +33,7 @@ object AppModule {
     @Singleton
     fun providesVocabularyNoteDatabase(
         @ApplicationContext context : Context
-    ) : VocabularyNoteDatabase{
+    ) : VocabularyNoteDatabase {
         return Room.databaseBuilder(
             context,
             VocabularyNoteDatabase::class.java,
@@ -67,7 +68,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providesPreferences(sharedPreferences: SharedPreferences) : Preferences{
+    fun providesPreferences(sharedPreferences: SharedPreferences) : Preferences {
         return DefaultPreferences(sharedPreferences)
     }
 

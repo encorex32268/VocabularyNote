@@ -4,14 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,13 +12,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.lihan.vocabularynote.core.navigation.Route
-import com.lihan.vocabularynote.presentations.add.InsertEditScreen
-import com.lihan.vocabularynote.presentations.exam.ExamScreen
-import com.lihan.vocabularynote.presentations.home.HomeScreen
-import com.lihan.vocabularynote.presentations.info.InfoScreen
-import com.lihan.vocabularynote.presentations.settings.SettingsScreen
-import com.lihan.vocabularynote.presentations.storage.StorageScreen
-import com.lihan.vocabularynote.presentations.tag.TagScreen
+import com.lihan.vocabularynote.feature_allnotes.presentations.add.InsertEditScreen
+import com.lihan.vocabularynote.feature_allnotes.presentations.exam.ExamScreen
+import com.lihan.vocabularynote.feature_allnotes.presentations.home.HomeScreen
+import com.lihan.vocabularynote.info.InfoScreen
+import com.lihan.vocabularynote.settings.SettingsScreen
+import com.lihan.vocabularynote.storage.StorageScreen
+import com.lihan.vocabularynote.feature_tag.presentations.TagScreen
 import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
