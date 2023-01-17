@@ -4,7 +4,7 @@
 
     <application
         android:name=".VocabularyNoteApp"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/app_icon"
@@ -17,7 +17,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.VocabularyNote">
+            android:theme="@style/Theme.VocabularyNote"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

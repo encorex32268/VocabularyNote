@@ -5,8 +5,11 @@ object Route {
     const val ADD_EDIT = "add_edit"
     const val EXAM = "exam"
 
-    const val STORAGE = "Storage"
     const val TAG = "Tag"
+    const val TAG_ADD_EDIT = "NewTag"
+
+
+    const val STORAGE = "Storage"
     const val INFO = "Info"
     const val SETTINGS = "Settings"
 

@@ -17,7 +17,9 @@ class TagViewModel @Inject constructor (
 ) : ViewModel() {
 
     var tagState by mutableStateOf(TagState())
-
+    init {
+        onEvent(TagEvent.GetTags)
+    }
     fun onEvent(event: TagEvent){
         when(event){
             TagEvent.GetTags ->{

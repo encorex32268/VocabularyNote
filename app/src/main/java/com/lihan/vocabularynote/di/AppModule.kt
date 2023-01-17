@@ -11,12 +11,10 @@ import com.lihan.vocabularynote.feature_allnotes.domain.use_cases.*
 import com.lihan.vocabularynote.core.domain.repository.Preferences
 import com.lihan.vocabularynote.feature_tag.domain.repository.TagRepository
 import com.lihan.vocabularynote.feature_allnotes.domain.repository.VocabularyNoteRepository
-import com.lihan.vocabularynote.domain.use_cases.*
 import com.lihan.vocabularynote.feature_tag.domain.use_cases.DeleteTag
 import com.lihan.vocabularynote.feature_tag.domain.use_cases.GetAllTag
 import com.lihan.vocabularynote.feature_tag.domain.use_cases.InsertTag
 import com.lihan.vocabularynote.feature_tag.domain.use_cases.TagUseCases
-import com.lihan.vocabularynote.domain.use_cases.vocabulary.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

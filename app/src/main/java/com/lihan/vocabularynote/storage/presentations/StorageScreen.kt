@@ -1,4 +1,4 @@
-package com.lihan.vocabularynote.storage
+package com.lihan.vocabularynote.storage.presentations
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
