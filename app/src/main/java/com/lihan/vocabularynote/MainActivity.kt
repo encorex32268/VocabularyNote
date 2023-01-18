@@ -19,8 +19,8 @@ import com.lihan.vocabularynote.feature_allnotes.presentations.add.InsertEditScr
 import com.lihan.vocabularynote.feature_allnotes.presentations.exam.ExamScreen
 import com.lihan.vocabularynote.feature_allnotes.presentations.home.HomeScreen
 import com.lihan.vocabularynote.feature_tag.domain.model.Tag
-import com.lihan.vocabularynote.info.InfoScreen
-import com.lihan.vocabularynote.settings.SettingsScreen
+import com.lihan.vocabularynote.feature.info.presentations.InfoScreen
+import com.lihan.vocabularynote.feature.settings.presentations.SettingsScreen
 import com.lihan.vocabularynote.storage.presentations.StorageScreen
 import com.lihan.vocabularynote.feature_tag.presentations.TagScreen
 import com.lihan.vocabularynote.feature_tag.presentations.add.TagAddScreen

@@ -1,4 +1,4 @@
-package com.lihan.vocabularynote.settings
+package com.lihan.vocabularynote.feature.info.presentations
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -14,7 +14,7 @@ import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 
 @Composable
-fun SettingsScreen(
+fun InfoScreen(
     onCloseButtonClicked : () -> Unit
 ) {
     val spacer = LocalSpacing.current
@@ -36,8 +36,8 @@ fun SettingsScreen(
         }
         TitleText(
             modifier = Modifier.padding(spacer.spaceMedium),
-            text = Route.SETTINGS
+            text = Route.INFO
         )
-        Spacer(modifier = androidx.compose.ui.Modifier.height(spacer.spaceSmall))
+        Spacer(modifier = Modifier.height(spacer.spaceSmall))
     }
 }
