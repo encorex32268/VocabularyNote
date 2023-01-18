@@ -15,16 +15,16 @@ import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.gson.Gson
 import com.lihan.vocabularynote.core.navigation.Route
-import com.lihan.vocabularynote.feature_allnotes.presentations.add.InsertEditScreen
-import com.lihan.vocabularynote.feature_allnotes.presentations.exam.ExamScreen
-import com.lihan.vocabularynote.feature_allnotes.presentations.home.HomeScreen
-import com.lihan.vocabularynote.feature_tag.domain.model.Tag
+import com.lihan.vocabularynote.feature.home.presentations.add.InsertEditScreen
+import com.lihan.vocabularynote.feature.home.presentations.exam.ExamScreen
+import com.lihan.vocabularynote.feature.home.presentations.home.HomeScreen
+import com.lihan.vocabularynote.feature.tag.domain.model.Tag
 import com.lihan.vocabularynote.feature.info.presentations.InfoScreen
 import com.lihan.vocabularynote.feature.settings.presentations.SettingsScreen
-import com.lihan.vocabularynote.storage.presentations.StorageScreen
-import com.lihan.vocabularynote.feature_tag.presentations.TagScreen
-import com.lihan.vocabularynote.feature_tag.presentations.add.TagAddScreen
-import com.lihan.vocabularynote.feature_tag.util.AssetTagType
+import com.lihan.vocabularynote.feature.storage.presentations.StorageScreen
+import com.lihan.vocabularynote.feature.tag.presentations.TagScreen
+import com.lihan.vocabularynote.feature.tag.presentations.add.TagAddScreen
+import com.lihan.vocabularynote.feature.tag.util.AssetTagType
 import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -106,7 +106,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigationNewTag = {
                                     navController.navigate(
-                                        route = Route.TAG_ADD_EDIT + "/${Uri.encode(Gson().toJson(Tag()))}"
+                                        route = Route.TAG_ADD_EDIT + "/${Uri.encode(Gson().toJson(
+                                            Tag()
+                                        ))}"
                                     )
                                 },
                                 onNavigationEditTag ={
@@ -126,7 +128,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
-                            val tag = it.arguments?.getParcelable<Tag>("tag")?:Tag()
+                            val tag = it.arguments?.getParcelable<Tag>("tag")?: Tag()
                             TagAddScreen(
                                 onCloseButtonClicked = {
                                     navController.navigateUp()
