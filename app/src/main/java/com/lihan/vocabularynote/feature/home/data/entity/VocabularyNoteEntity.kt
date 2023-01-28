@@ -13,5 +13,5 @@ data class VocabularyNoteEntity(
     val roma : String,
     val createDate : Long,
     val explain : String,
-    val noteStorageId : Long
+    val storageId : Int
 )

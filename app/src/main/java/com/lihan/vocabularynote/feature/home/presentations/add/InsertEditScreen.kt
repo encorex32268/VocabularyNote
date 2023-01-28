@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.lihan.vocabularynote.core.ui.LocalSpacing
-import com.lihan.vocabularynote.feature.home.domain.model.VocabularyNote
 
 
 @ExperimentalComposeUiApi
@@ -36,7 +35,8 @@ fun InsertEditScreen(
     modifier: Modifier = Modifier,
     noteId: Int = -1,
     navController: NavController,
-    viewModel : InsertEditViewModel = hiltViewModel()
+    viewModel : InsertEditViewModel = hiltViewModel(),
+    storageId : Int = -1
 ) {
     val spacer = LocalSpacing.current
 
@@ -53,12 +53,11 @@ fun InsertEditScreen(
             isEditPage = true
             viewModel.onEvent(InsertEditEvent.IsEditPage(noteId))
         }else{
-            viewModel.onEvent(InsertEditEvent.IsAddPage)
+            viewModel.onEvent(InsertEditEvent.IsAddPage(storageId))
         }
         focusRequester.requestFocus()
     }
 
-    val state = viewModel.state
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -149,7 +148,7 @@ fun InsertEditScreen(
                         .padding(spacer.spaceSmall)
                         .size(40.dp)
                         .background(
-                            color = Color(state.type),
+                            color = Color(viewModel.state.vocabularyNote?.type?:0),
                             shape = CircleShape
                         )
                         .clickable {
@@ -161,17 +160,17 @@ fun InsertEditScreen(
                             expanded = expanded,
                             onDismissRequest = { expanded = false }
                         ) {
-                            VocabularyNote.typeColors.forEach { color ->
+                            viewModel.state.tags.forEach { tag ->
                                 DropdownMenuItem(
                                     onClick = {
-                                        viewModel.onEvent(InsertEditEvent.TypeColorChanged(color))
+                                        viewModel.onEvent(InsertEditEvent.TypeColorChanged(tag.color))
                                         expanded = false
                                     }) {
                                     Box(
                                         modifier = Modifier
                                             .size(40.dp)
                                             .background(
-                                                color = color,
+                                                color = Color(tag.color),
                                                 shape = CircleShape
                                             )
                                     )
@@ -198,7 +197,7 @@ fun InsertEditScreen(
                                     down = second
                                 }
                             ,
-                            value = state.hiraganaOrKatakana,
+                            value = viewModel.state.vocabularyNote?.hiraganaOrKatakana?:"",
                             onValueChange = {
                                 viewModel.onEvent(InsertEditEvent.HiraganaChanged(it))
                             },
@@ -215,7 +214,7 @@ fun InsertEditScreen(
                             modifier = Modifier.focusOrder(second){
                                 down = third
                             },
-                            value = state.word,
+                            value = viewModel.state.vocabularyNote?.word?:"",
                             onValueChange = {
                                 viewModel.onEvent(InsertEditEvent.WordChanged(it))
                             },
@@ -254,7 +253,7 @@ fun InsertEditScreen(
                             .padding(spacer.spaceMedium)
                             .focusOrder(third)
                         ,
-                        value = state.explain,
+                        value = viewModel.state.vocabularyNote?.explain?:"",
                         onValueChange = {
                             viewModel.onEvent(InsertEditEvent.ExplainChanged(it))
                         },

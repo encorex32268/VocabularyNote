@@ -28,4 +28,8 @@ class StorageRepositoryImpl(
     override suspend fun getStorageById(storageId: Int): Storage? {
         return dao.getStorageById(storageId)?.toStorage()
     }
+
+    override suspend fun updateStorage(storage: Storage) {
+        dao.updateStorage(storage.toStorageEntity())
+    }
 }

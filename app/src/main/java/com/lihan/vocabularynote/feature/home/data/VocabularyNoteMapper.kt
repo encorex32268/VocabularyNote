@@ -12,7 +12,7 @@ fun VocabularyNoteEntity.toVocabularyNote() : VocabularyNote {
         roma = roma,
         createDate = createDate,
         explain = explain,
-        noteStorageId = noteStorageId
+        storageId = storageId
 
     )
 }
@@ -26,6 +26,6 @@ fun VocabularyNote.toVocabularyEntity() : VocabularyNoteEntity {
         roma = roma,
         createDate = createDate,
         explain = explain,
-        noteStorageId = noteStorageId
+        storageId = storageId
     )
 }

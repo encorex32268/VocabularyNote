@@ -28,7 +28,19 @@ class VocabularyNoteRepositoryImpl(
         dao.deleteVocabularyNote(noteId)
     }
 
+    override suspend fun updateVocabularyNote(vocabularyNote: VocabularyNote) {
+        dao.updateVocabularyNote(vocabularyNote.toVocabularyEntity())
+    }
+
     override suspend fun getVocabularyNote(noteId : Int): VocabularyNote? {
         return dao.getVocabularyNote(noteId = noteId)?.toVocabularyNote()
+    }
+
+    override fun getVocabularyByStorageId(storageId: Int): Flow<List<VocabularyNote>> {
+        return dao.getVocabularyByStorageId(storageId).map {
+            it.map {
+                it.toVocabularyNote()
+            }
+        }
     }
 }

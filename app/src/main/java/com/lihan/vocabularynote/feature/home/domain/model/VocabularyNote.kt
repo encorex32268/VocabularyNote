@@ -11,7 +11,7 @@ data class VocabularyNote(
     val roma : String,
     val createDate : Long,
     val explain : String,
-    val noteStorageId : Long
+    val storageId : Int
 ) {
     companion object{
         val typeColors = listOf<Color>(

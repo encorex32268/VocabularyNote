@@ -21,7 +21,10 @@ import com.lihan.vocabularynote.feature.home.presentations.home.HomeScreen
 import com.lihan.vocabularynote.feature.tag.domain.model.Tag
 import com.lihan.vocabularynote.feature.info.presentations.InfoScreen
 import com.lihan.vocabularynote.feature.settings.presentations.SettingsScreen
+import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 import com.lihan.vocabularynote.feature.storage.presentations.StorageScreen
+import com.lihan.vocabularynote.feature.storage.presentations.edit.StorageEditScreen
+import com.lihan.vocabularynote.feature.storage.util.AssetStorageType
 import com.lihan.vocabularynote.feature.tag.presentations.TagScreen
 import com.lihan.vocabularynote.feature.tag.presentations.add.TagAddScreen
 import com.lihan.vocabularynote.feature.tag.util.AssetTagType
@@ -55,17 +58,22 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(
-                            route = Route.ADD_EDIT + "/{note_id}",
+                            route = Route.ADD_EDIT + "/{note_id}/{storageId}",
                             arguments = listOf(
                                 navArgument("note_id") {
+                                    type = NavType.IntType
+                                },
+                                navArgument("storageId"){
                                     type = NavType.IntType
                                 }
                             )
                         ) {
                             val noteId = it.arguments?.getInt("note_id") ?: -1
+                            val storageId = it.arguments?.getInt("storageId")?:-1
                             InsertEditScreen(
                                 noteId = noteId,
-                                navController = navController
+                                navController = navController,
+                                storageId = storageId
                             )
                         }
                         composable(
@@ -88,7 +96,28 @@ class MainActivity : ComponentActivity() {
                                     )
                                 },
                                 onEditStorageClicked = {
-
+                                    navController.navigate(
+                                        route = Route.STORAGE_EDIT + "/${Uri.encode(Gson().toJson(it))}"
+                                    )
+                                }
+                            )
+                        }
+                        composable(
+                            route = Route.STORAGE_EDIT + "/{storage}",
+                            arguments = listOf(
+                                navArgument("storage"){
+                                    type = AssetStorageType()
+                                }
+                            )
+                        ){
+                            val storage = it.arguments?.getParcelable("storage")?:Storage()
+                            StorageEditScreen(
+                                storage = storage,
+                                onCloseButtonClicked = {
+                                    navController.navigateUp()
+                                },
+                                onNewVocabularyNoteClicked = {
+                                    navController.navigate(Route.ADD_EDIT + "/-1/$it")
                                 }
                             )
                         }

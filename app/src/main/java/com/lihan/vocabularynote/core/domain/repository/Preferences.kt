@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 interface Preferences {
 
-    fun saveUserColorWhenAdd(color : Color)
+    fun saveUserColorWhenAdd(colorArgb : Int)
     fun loadUserColorWhenAdd() : Color
 
 

@@ -1,22 +1,28 @@
 package com.lihan.vocabularynote.feature.home.presentations.add
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lihan.vocabularynote.feature.home.domain.model.VocabularyNote
 import com.lihan.vocabularynote.core.domain.repository.Preferences
 import com.lihan.vocabularynote.feature.home.domain.use_cases.VocabularyNoteUseCases
+import com.lihan.vocabularynote.feature.tag.domain.use_cases.TagUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.time.Instant
 import javax.inject.Inject
 
 
 @HiltViewModel
 class InsertEditViewModel @Inject constructor(
     private val vocabularyNoteUseCases: VocabularyNoteUseCases,
+    private val tagUseCases: TagUseCases,
     private val preferences: Preferences
 ) : ViewModel(){
 
@@ -25,18 +31,31 @@ class InsertEditViewModel @Inject constructor(
 
 
     var state by  mutableStateOf(
-        VocabularyNote(
-            id = currentNoteId,
-            type =preferences.loadUserColorWhenAdd().toArgb(),
-            word = "",
-            hiraganaOrKatakana = "",
-            roma = "",
-            createDate = System.currentTimeMillis(),
-            explain = "",
-            noteStorageId = 0
+        InsertEditState(
+            vocabularyNote = VocabularyNote(
+                id = currentNoteId,
+                type =preferences.loadUserColorWhenAdd().toArgb(),
+                word = "",
+                hiraganaOrKatakana = "",
+                roma = "",
+                createDate = Instant.now().toEpochMilli(),
+                explain = "",
+                storageId = 0
+            )
         )
+
     )
         private set
+
+    init {
+        viewModelScope.launch {
+            tagUseCases.getAllTag.invoke().collect{
+                state = state.copy(
+                    tags = it
+                )
+            }
+        }
+    }
 
 
 
@@ -47,40 +66,24 @@ class InsertEditViewModel @Inject constructor(
                     currentNoteId = event.id
                     vocabularyNoteUseCases.getVocabularyByNoteId(event.id)?.let {
                         state = state.copy(
-                            type =  it.type,
-                            word = if (it.word.isEmpty()){
-                                it.hiraganaOrKatakana
-                            }else{ it.word },
-                            hiraganaOrKatakana = if (it.word.isNotEmpty()){
-                                it.hiraganaOrKatakana
-                            }else{ "" },
-                            roma = it.roma,
-                            createDate = it.createDate,
-                            explain = it.explain
+                            vocabularyNote = it
                         )
                     }
                 }
             }
             is InsertEditEvent.IsAddPage ->{
                 state = state.copy(
-
+                    vocabularyNote = state.vocabularyNote?.copy(
+                        storageId = event.storageId
+                    )
                 )
             }
             is InsertEditEvent.Save ->{
                 viewModelScope.launch {
-                    vocabularyNoteUseCases.insertEditVocabularyNote(
-                        vocabularyNote = VocabularyNote(
-                            id = currentNoteId,
-                            type = state.type,
-                            word = state.word,
-                            hiraganaOrKatakana = state.hiraganaOrKatakana,
-                            roma = state.roma,
-                            createDate = state.createDate,
-                            explain = state.explain,
-                            noteStorageId = state.noteStorageId
-                            //TODO: note storage id
-                        )
-                    )
+                    state.vocabularyNote?.let {
+                        Log.d("TAG", "onEvent: ${it}")
+                        vocabularyNoteUseCases.insertEditVocabularyNote(it)
+                    }
                 }
             }
             is InsertEditEvent.Remove ->{
@@ -93,23 +96,31 @@ class InsertEditViewModel @Inject constructor(
             }
             is InsertEditEvent.TypeColorChanged ->{
                 state = state.copy(
-                    type = event.color.toArgb()
+                    vocabularyNote = state.vocabularyNote?.copy(
+                        type = event.colorArgb
+                    )
                 )
-                preferences.saveUserColorWhenAdd(event.color)
+                preferences.saveUserColorWhenAdd(event.colorArgb)
             }
             is InsertEditEvent.WordChanged ->{
                 state = state.copy(
-                    word = event.word
+                    vocabularyNote = state.vocabularyNote?.copy(
+                        word = event.word
+                    )
                 )
             }
             is InsertEditEvent.HiraganaChanged ->{
                 state = state.copy(
-                    hiraganaOrKatakana = event.hiragana
+                    vocabularyNote = state.vocabularyNote?.copy(
+                        hiraganaOrKatakana = event.hiragana
+                    )
                 )
             }
             is InsertEditEvent.ExplainChanged ->{
                 state = state.copy(
-                    explain = event.explain
+                    vocabularyNote = state.vocabularyNote?.copy(
+                        explain = event.explain
+                    )
                 )
             }
 

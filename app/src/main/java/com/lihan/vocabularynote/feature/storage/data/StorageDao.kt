@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.lihan.vocabularynote.feature.storage.data.entity.StorageEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -21,5 +22,8 @@ interface StorageDao {
 
     @Query("select * from StorageEntity where id = :storageId")
     suspend fun getStorageById(storageId: Int) : StorageEntity?
+
+    @Update
+    suspend fun updateStorage(storageEntity: StorageEntity)
 
 }

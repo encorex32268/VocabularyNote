@@ -48,7 +48,8 @@ fun VocabularyNoteItem(
                 .height(noteCardHeight)
                 .padding(spacer.spaceMedium)
                 .shadow(
-                    elevation = 10.dp
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = 5.dp
                 )
                 .background(
                     color = Color.White,

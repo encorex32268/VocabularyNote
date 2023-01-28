@@ -8,8 +8,9 @@ import com.lihan.vocabularynote.core.domain.repository.Preferences
 class DefaultPreferences(
     private val sharedPreferences: SharedPreferences
 )  : Preferences {
-    override fun saveUserColorWhenAdd(color: Color) {
-        sharedPreferences.edit().putInt(USER_ADD_COLOR,color.toArgb()).apply()
+
+    override fun saveUserColorWhenAdd(colorArgb: Int) {
+        sharedPreferences.edit().putInt(USER_ADD_COLOR,colorArgb).apply()
     }
 
     override fun loadUserColorWhenAdd(): Color {
