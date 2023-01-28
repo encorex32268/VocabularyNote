@@ -10,8 +10,9 @@ data class VocabularyNote(
     val hiraganaOrKatakana : String,
     val roma : String,
     val createDate : Long,
-    val explain : String
-    ) {
+    val explain : String,
+    val noteStorageId : Long
+) {
     companion object{
         val typeColors = listOf<Color>(
             Color(252,46,4),

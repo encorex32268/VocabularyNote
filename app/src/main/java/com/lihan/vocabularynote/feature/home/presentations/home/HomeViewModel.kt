@@ -37,7 +37,6 @@ class HomeViewModel @Inject constructor(
                 )
             }
             .launchIn(viewModelScope)
-
     }
 
     fun onEvent(event: HomeEvent) {

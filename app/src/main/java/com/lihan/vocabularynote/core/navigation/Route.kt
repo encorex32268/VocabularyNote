@@ -10,6 +10,8 @@ object Route {
 
 
     const val STORAGE = "Storage"
+    const val STORAGE_EDIT = "Storage_EDIT"
+
     const val INFO = "Info"
     const val SETTINGS = "Settings"
 

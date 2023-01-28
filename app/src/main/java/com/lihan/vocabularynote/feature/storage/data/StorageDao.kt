@@ -21,4 +21,5 @@ interface StorageDao {
 
     @Query("select * from StorageEntity where id = :storageId")
     suspend fun getStorageById(storageId: Int) : StorageEntity?
+
 }

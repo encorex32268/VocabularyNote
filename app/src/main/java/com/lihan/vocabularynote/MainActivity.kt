@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             ProvideWindowInsets(windowInsetsAnimationsEnabled = false) {
                 VocabularyNoteTheme {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = Route.TAG) {
+                    NavHost(navController = navController, startDestination = Route.STORAGE) {
                         composable(route = Route.HOME) {
                             HomeScreen(
                                 onNavigation = {
@@ -77,7 +77,6 @@ class MainActivity : ComponentActivity() {
                             route = Route.STORAGE
                         ) {
                             StorageScreen(
-                                onAddNewStorageClicked = {},
                                 onCloseButtonClicked = {
                                     navController.navigate(
                                         route = Route.HOME,
@@ -87,9 +86,13 @@ class MainActivity : ComponentActivity() {
                                             saveState = false
                                         ).build()
                                     )
+                                },
+                                onEditStorageClicked = {
+
                                 }
                             )
                         }
+
                         composable(
                             route = Route.TAG
                         ) {

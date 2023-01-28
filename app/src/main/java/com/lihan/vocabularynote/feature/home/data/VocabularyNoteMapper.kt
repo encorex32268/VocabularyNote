@@ -11,7 +11,9 @@ fun VocabularyNoteEntity.toVocabularyNote() : VocabularyNote {
         hiraganaOrKatakana = hiraganaOrKatakana,
         roma = roma,
         createDate = createDate,
-        explain = explain
+        explain = explain,
+        noteStorageId = noteStorageId
+
     )
 }
 
@@ -23,6 +25,7 @@ fun VocabularyNote.toVocabularyEntity() : VocabularyNoteEntity {
         hiraganaOrKatakana = hiraganaOrKatakana,
         roma = roma,
         createDate = createDate,
-        explain = explain
+        explain = explain,
+        noteStorageId = noteStorageId
     )
 }

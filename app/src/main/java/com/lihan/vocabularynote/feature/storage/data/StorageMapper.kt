@@ -1,5 +1,7 @@
 package com.lihan.vocabularynote.feature.storage.data
 
+import com.lihan.vocabularynote.feature.home.data.toVocabularyEntity
+import com.lihan.vocabularynote.feature.home.data.toVocabularyNote
 import com.lihan.vocabularynote.feature.storage.data.entity.StorageEntity
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 

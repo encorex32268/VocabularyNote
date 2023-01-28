@@ -32,7 +32,8 @@ class InsertEditViewModel @Inject constructor(
             hiraganaOrKatakana = "",
             roma = "",
             createDate = System.currentTimeMillis(),
-            explain = ""
+            explain = "",
+            noteStorageId = 0
         )
     )
         private set
@@ -75,7 +76,9 @@ class InsertEditViewModel @Inject constructor(
                             hiraganaOrKatakana = state.hiraganaOrKatakana,
                             roma = state.roma,
                             createDate = state.createDate,
-                            explain = state.explain
+                            explain = state.explain,
+                            noteStorageId = state.noteStorageId
+                            //TODO: note storage id
                         )
                     )
                 }

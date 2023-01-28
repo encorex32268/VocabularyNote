@@ -6,12 +6,12 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class VocabularyNoteEntity(
-    @PrimaryKey
-    val id : Int?=null,
+    @PrimaryKey(autoGenerate = true) val id : Int?=null,
     val type : Int,
     val word : String,
     val hiraganaOrKatakana : String,
     val roma : String,
     val createDate : Long,
-    val explain : String
+    val explain : String,
+    val noteStorageId : Long
 )
