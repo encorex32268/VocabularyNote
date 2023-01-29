@@ -128,6 +128,9 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNewVocabularyNoteClicked = {
                                     navController.navigate(Route.ADD_EDIT + "/-1/$it")
+                                },
+                                onEditVocabularyNoteClicked ={ noteid , storageId ->
+                                    navController.navigate(Route.ADD_EDIT + "/$noteid/$storageId")
                                 }
                             )
                         }

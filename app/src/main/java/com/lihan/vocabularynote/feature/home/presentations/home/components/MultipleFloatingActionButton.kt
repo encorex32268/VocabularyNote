@@ -25,13 +25,22 @@ import androidx.compose.ui.unit.dp
 data class MultipleActionItem(
     val name : String ,
     val icon : ImageVector
-)
+){
+    companion object{
+        const val ACTION_ITEM_ADD = "add"
+        const val ACTION_ITEM_EDIT= "edit"
+        const val ACTION_ITEM_DELETE= "delete"
+        const val ACTION_ITEM_TOOL= "tool"
+    }
+}
+
 
 
 @Composable
 fun MultipleFloatingActionButton(
     multipleActionItems : List<MultipleActionItem>,
     onFloatingButtonClick : (MultipleActionItem) -> Unit,
+    floatingActionButtonIcon : ImageVector = Icons.Default.Add
 ) {
     var isClicked by remember {
         mutableStateOf(false)
@@ -68,7 +77,7 @@ fun MultipleFloatingActionButton(
         ){
             Icon(
                 modifier = Modifier.rotate(rotation),
-                imageVector = Icons.Default.Add,
+                imageVector = floatingActionButtonIcon,
                 contentDescription = "FloatingMenuButton",
                 tint = Color.Black
             )

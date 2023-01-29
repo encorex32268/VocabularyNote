@@ -7,7 +7,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,12 +30,14 @@ import com.lihan.vocabularynote.feature.home.domain.model.VocabularyNote
 fun VocabularyNoteItem(
     modifier: Modifier = Modifier,
     vocabularyNote: VocabularyNote,
-    onItemClick : (Int) -> Unit = {},
-    typeCircleSize : Dp = 40.dp,
-    noteCardHeight : Dp = 150.dp,
-    hiraganaFontSize : TextUnit = 16.sp,
-    wordFontSize : TextUnit = 30.sp,
-    explainFontSize : TextUnit = 18.sp
+    onItemClick: (Int) -> Unit = {},
+    typeCircleSize: Dp = 40.dp,
+    noteCardHeight: Dp = 150.dp,
+    hiraganaFontSize: TextUnit = 16.sp,
+    wordFontSize: TextUnit = 30.sp,
+    explainFontSize: TextUnit = 18.sp,
+    isShowEdit: Boolean = false,
+    onEditClick: (() -> Unit?)? =null
 ) {
     val spacer = LocalSpacing.current
     var rotated by remember {
@@ -79,6 +85,21 @@ fun VocabularyNoteItem(
                         onItemClick(vocabularyNote.id!!)
                     }
                 )
+                if (isShowEdit){
+                   IconButton(
+                       modifier = Modifier.align(Alignment.TopEnd),
+                       onClick = {
+                       if (onEditClick != null) {
+                           onEditClick()
+                       }
+                   }) {
+                       Icon(
+                           imageVector = Icons.Default.Edit,
+                           contentDescription = "VocabularyNoteEdit"
+                       )
+                   }
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -114,7 +135,7 @@ fun VocabularyNoteItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .graphicsLayer {
-                             rotationY = 180f
+                            rotationY = 180f
                         }
                     ,
                     verticalArrangement = Arrangement.Center,
