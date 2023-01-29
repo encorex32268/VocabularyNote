@@ -14,7 +14,7 @@ class DefaultPreferences(
     }
 
     override fun loadUserColorWhenAdd(): Color {
-        return Color(sharedPreferences.getInt(USER_ADD_COLOR,Color(252,46,4).toArgb()))
+        return Color(sharedPreferences.getInt(USER_ADD_COLOR,Color(255,255,255).toArgb()))
     }
     companion object{
         private const val USER_ADD_COLOR = "user_add_color"

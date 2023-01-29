@@ -12,5 +12,4 @@ sealed class InsertEditEvent{
     data class ExplainChanged(val explain : String) : InsertEditEvent()
     data class IsAddPage(val storageId : Int) : InsertEditEvent()
 
-
 }

@@ -76,7 +76,6 @@ fun TagScreen(
                         ),
                         tag = item,
                         onTagClicked = {
-                            Log.d("TAG", "TagScreen: ${it}")
                             onNavigationEditTag(it)
                         }
                     )

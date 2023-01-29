@@ -14,6 +14,7 @@ import com.lihan.vocabularynote.feature.home.domain.use_cases.VocabularyNoteUseC
 import com.lihan.vocabularynote.feature.tag.domain.use_cases.TagUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.Instant
 import javax.inject.Inject
@@ -49,7 +50,7 @@ class InsertEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            tagUseCases.getAllTag.invoke().collect{
+            tagUseCases.getAllTag.invoke().collectLatest{
                 state = state.copy(
                     tags = it
                 )
@@ -81,7 +82,6 @@ class InsertEditViewModel @Inject constructor(
             is InsertEditEvent.Save ->{
                 viewModelScope.launch {
                     state.vocabularyNote?.let {
-                        Log.d("TAG", "onEvent: ${it}")
                         vocabularyNoteUseCases.insertEditVocabularyNote(it)
                     }
                 }

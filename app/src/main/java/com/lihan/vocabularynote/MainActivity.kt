@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
             ProvideWindowInsets(windowInsetsAnimationsEnabled = false) {
                 VocabularyNoteTheme {
                     val navController = rememberNavController()
-                    NavHost(navController = navController, startDestination = Route.STORAGE) {
+                    NavHost(navController = navController, startDestination = Route.HOME) {
                         composable(route = Route.HOME) {
                             HomeScreen(
                                 onNavigation = {
@@ -73,7 +73,17 @@ class MainActivity : ComponentActivity() {
                             InsertEditScreen(
                                 noteId = noteId,
                                 navController = navController,
-                                storageId = storageId
+                                storageId = storageId,
+                                onTagAddClicked = {
+                                    navController.navigate(
+                                        route = Route.TAG,
+                                        navOptions = NavOptions.Builder()
+                                            .setPopUpTo(
+                                                route = Route.TAG,
+                                                inclusive = true
+                                            ).build()
+                                    )
+                                }
                             )
                         }
                         composable(

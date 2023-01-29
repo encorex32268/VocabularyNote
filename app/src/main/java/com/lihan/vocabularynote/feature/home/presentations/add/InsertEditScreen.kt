@@ -9,10 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -21,12 +18,15 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.lihan.vocabularynote.core.ui.LocalSpacing
+import com.lihan.vocabularynote.feature.home.presentations.add.components.TagDialog
 
 
 @ExperimentalComposeUiApi
@@ -36,7 +36,8 @@ fun InsertEditScreen(
     noteId: Int = -1,
     navController: NavController,
     viewModel : InsertEditViewModel = hiltViewModel(),
-    storageId : Int = -1
+    storageId : Int = -1,
+    onTagAddClicked : () -> Unit
 ) {
     val spacer = LocalSpacing.current
 
@@ -46,7 +47,7 @@ fun InsertEditScreen(
     val focusRequester  = FocusRequester()
     val (first, second,third) = FocusRequester.createRefs()
     val focusManager = LocalFocusManager.current
-
+    val dialogWidth = LocalConfiguration.current.screenWidthDp.dp / 2
 
     LaunchedEffect(key1 = noteId){
         if (noteId != -1){
@@ -148,7 +149,7 @@ fun InsertEditScreen(
                         .padding(spacer.spaceSmall)
                         .size(40.dp)
                         .background(
-                            color = Color(viewModel.state.vocabularyNote?.type?:0),
+                            color = Color(viewModel.state.vocabularyNote?.type ?: 0),
                             shape = CircleShape
                         )
                         .clickable {
@@ -156,29 +157,26 @@ fun InsertEditScreen(
                         }
                         .align(Alignment.TopStart)
                     ) {
-                        DropdownMenu(
-                            expanded = expanded,
-                            onDismissRequest = { expanded = false }
-                        ) {
-                            viewModel.state.tags.forEach { tag ->
-                                DropdownMenuItem(
-                                    onClick = {
-                                        viewModel.onEvent(InsertEditEvent.TypeColorChanged(tag.color))
-                                        expanded = false
-                                    }) {
-                                    Box(
-                                        modifier = Modifier
-                                            .size(40.dp)
-                                            .background(
-                                                color = Color(tag.color),
-                                                shape = CircleShape
-                                            )
-                                    )
+                        if (expanded){
+                            TagDialog(
+                                modifier = Modifier
+                                    .background(Color.White)
+                                    .width(dialogWidth)
+                                ,
+                                isShow = expanded,
+                                tags = viewModel.state.tags,
+                                onAddTagClicked = {
+                                    expanded = false
+                                    onTagAddClicked()
+                                },
+                                onTagItemClicked = {
+                                    expanded = false
+                                    viewModel.onEvent(InsertEditEvent.TypeColorChanged(it.color))
                                 }
-
-                            }
+                            )
 
                         }
+
                     }
                     Column(
                         modifier = Modifier
@@ -186,7 +184,8 @@ fun InsertEditScreen(
                             .padding(
                                 start = spacer.spaceExtraLarge,
                                 top = spacer.spaceMedium,
-                                end = spacer.spaceMedium,),
+                                end = spacer.spaceMedium,
+                            ),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
