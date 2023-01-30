@@ -32,4 +32,12 @@ class StorageRepositoryImpl(
     override suspend fun updateStorage(storage: Storage) {
         dao.updateStorage(storage.toStorageEntity())
     }
+
+    override fun getStorageByName(searchText: String): Flow<List<Storage>> {
+        return dao.getStorageByName(searchText).map {
+            it.map {
+                it.toStorage()
+            }
+        }
+    }
 }

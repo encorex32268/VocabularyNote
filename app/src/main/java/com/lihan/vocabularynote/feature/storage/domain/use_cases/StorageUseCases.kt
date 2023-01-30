@@ -7,5 +7,6 @@ class StorageUseCases(
     val getStorageById: GetStorageById,
     val getStorages: GetStorages,
     val insertStorage: InsertStorage,
-    val updateStorage : UpdateStorage
+    val updateStorage : UpdateStorage,
+    val getStorageByName: GetStorageByName
 )

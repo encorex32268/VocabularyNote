@@ -1,6 +1,6 @@
 package com.lihan.vocabularynote.feature.storage.presentations
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,13 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
+import com.lihan.vocabularynote.R
+
 
 @Composable
 fun StorageItem(
@@ -37,9 +36,14 @@ fun StorageItem(
           modifier = Modifier
               .weight(1f)
               .clip(RoundedCornerShape(8.dp))
-              .background(Color.Black)
               .height(80.dp)
-        )
+        ){
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(id = R.drawable.icon_folder),
+                contentDescription = ""
+            )
+        }
         Spacer(modifier = Modifier.width(spacer.spaceMedium))
         Column(
             modifier = Modifier

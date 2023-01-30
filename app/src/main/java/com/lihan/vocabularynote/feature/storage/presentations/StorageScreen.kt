@@ -47,7 +47,7 @@ fun StorageScreen(
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect {
             if (it == UiEvent.Success){
-                scrollState.animateScrollToItem(viewModel.storageState.items.size - 1)
+                scrollState.animateScrollToItem(viewModel.storageState.items.size)
             }
         }
     }
@@ -85,7 +85,7 @@ fun StorageScreen(
 
                 SearchBar(
                     modifier = Modifier
-                        .weight(9f)
+                        .weight(1f)
                         .padding(spacer.spaceSmall)
                     ,
                     onValueChange = {
@@ -101,18 +101,6 @@ fun StorageScreen(
                         viewModel.onEvent(StorageEvent.ChangeHintVisible(it.isFocused))
                     },
                     shouldShowHint = viewModel.storageState.isHintVisible
-                )
-
-
-                Icon(
-                    modifier = Modifier.weight(1f),
-                    imageVector = Icons.Default.Filter1,
-                    contentDescription = "FilterBAndW"
-                )
-                Icon(
-                    modifier = Modifier.weight(1f),
-                    imageVector = Icons.Default.Filter,
-                    contentDescription = "Filter"
                 )
             }
             Spacer(modifier = Modifier.height(spacer.spaceSmall))

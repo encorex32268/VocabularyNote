@@ -115,7 +115,11 @@ fun HomeScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = spacer.spaceMedium, end = spacer.spaceMedium),
+                    .padding(
+                        start = spacer.spaceMedium,
+                        end = spacer.spaceMedium,
+                        top = spacer.spaceMedium
+                    ),
             ) {
                 IconButton(
                     modifier = Modifier.weight(1f),
@@ -126,7 +130,9 @@ fun HomeScreen(
                     }
                 ) {
                     Icon(
-                        modifier = Modifier.size(36.dp),
+                        modifier = Modifier
+                            .size(48.dp)
+                            .padding(top = spacer.spaceMedium),
                         painter = painterResource(id = R.drawable.icon_menu),
                         contentDescription = "Drawer Menu"
                     )

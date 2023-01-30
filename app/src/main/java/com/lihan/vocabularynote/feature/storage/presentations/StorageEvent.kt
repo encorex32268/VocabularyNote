@@ -6,8 +6,6 @@ sealed class StorageEvent{
     object InsertStorage : StorageEvent()
     object GetAllStorage  : StorageEvent()
     data class SearchStorage(val text : String ) : StorageEvent()
-    object AToZFilter : StorageEvent()
-    object NewFilter : StorageEvent()
     data class ChangeHintVisible(val visible: Boolean) : StorageEvent()
 
 }

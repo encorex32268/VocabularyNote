@@ -26,4 +26,7 @@ interface StorageDao {
     @Update
     suspend fun updateStorage(storageEntity: StorageEntity)
 
+     @Query("select * from StorageEntity where name like :searchText ")
+     fun getStorageByName(searchText : String) : Flow<List<StorageEntity>>
+
 }

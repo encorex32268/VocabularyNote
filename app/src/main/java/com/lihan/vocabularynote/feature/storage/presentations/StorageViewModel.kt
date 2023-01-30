@@ -11,9 +11,7 @@ import com.lihan.vocabularynote.feature.storage.domain.use_cases.StorageUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDateTime
@@ -39,23 +37,18 @@ class StorageViewModel @Inject constructor(
         when(event){
             is StorageEvent.SearchStorage->{
                 if (event.text.isEmpty()){
+                    storageState = storageState.copy(
+                        searchText = event.text
+                    )
                     refreshData()
                 }else{
-//                    storageState = storageState.copy(
-//                        items = ,
-//                        searchText = event.text
-//                    )
+                    storageState = storageState.copy(
+                        searchText = event.text,
+                        items = storageState.items.filter {
+                            it.name.contains(event.text)
+                        }
+                    )
                 }
-            }
-            is StorageEvent.AToZFilter->{
-//                storageState = storageState.copy(
-//                    items = storageState.items.sortedByDescending { }
-//                )
-            }
-            is StorageEvent.NewFilter->{
-//                storageState = storageState.copy(
-//                    items = storageState.items.sortedByDescending { it.createAt }
-//                )
             }
             is StorageEvent.GetAllStorage->{
                 refreshData()

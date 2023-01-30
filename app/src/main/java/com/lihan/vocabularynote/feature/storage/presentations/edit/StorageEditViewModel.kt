@@ -51,12 +51,36 @@ class StorageEditViewModel @Inject constructor(
             }
             is StorageEditEvent.UpdateStorage->{
                 viewModelScope.launch {
-                    storageUseCases.updateStorage(event.storage)
+                    storageUseCases.updateStorage(state.storage)
                 }
             }
             is StorageEditEvent.InsertVocabulary->{
                 viewModelScope.launch {
                     vocabularyNoteUseCases.insertEditVocabularyNote(event.vocabularyNote)
+                }
+            }
+            is StorageEditEvent.InitStorage->{
+                state = state.copy(
+                    storage = event.storage,
+                )
+            }
+            is StorageEditEvent.ChangeStorageName->{
+                state = state.copy(
+                    storage = state.storage.copy(
+                        name = event.text
+                    )
+                )
+            }
+            is StorageEditEvent.ChangeStorageDescription->{
+                state = state.copy(
+                    storage = state.storage.copy(
+                        description = event.description
+                    )
+                )
+            }
+            is StorageEditEvent.DeleteStorage->{
+                viewModelScope.launch {
+                    storageUseCases.deleteStorage(event.storageId)
                 }
             }
 
