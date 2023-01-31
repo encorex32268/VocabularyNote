@@ -39,6 +39,7 @@ fun SearchBar(
     text : String,
     onFocusChanged : (FocusState) -> Unit,
     shouldShowHint : Boolean = false,
+    hintText : String = ""
 ) {
     val spacer = LocalSpacing.current
     Box(
@@ -73,7 +74,7 @@ fun SearchBar(
         )
         if (shouldShowHint){
             Text(
-                text = "Search...",
+                text = hintText,
                 style = MaterialTheme.typography.body1,
                 fontWeight = FontWeight.Light,
                 color = Color.LightGray,

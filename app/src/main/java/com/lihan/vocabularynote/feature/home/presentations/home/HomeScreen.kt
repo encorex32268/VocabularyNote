@@ -2,6 +2,8 @@ package com.lihan.vocabularynote.feature.home.presentations.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -26,6 +28,7 @@ import com.lihan.vocabularynote.feature.home.presentations.home.components.navig
 import com.lihan.vocabularynote.feature.home.presentations.home.components.navigationdrawer.DrawerItem
 import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.core.ui.LocalSpacing
+import com.lihan.vocabularynote.feature.home.presentations.home.components.VocabularyNoteItem
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
@@ -43,7 +46,7 @@ fun HomeScreen(
     var expanded by remember {
         mutableStateOf(false)
     }
-    viewModel.onEvent(HomeEvent.GetNotes)
+
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = modifier.fillMaxSize(),
@@ -155,13 +158,14 @@ fun HomeScreen(
                     onFocusChanged = {
                         viewModel.onEvent(HomeEvent.ChangeHintVisible(it.isFocused))
                     },
-                    shouldShowHint = viewModel.state.isHintVisible
+                    shouldShowHint = viewModel.state.isHintVisible,
+                    hintText = "Search Vocabulary..."
                 )
 
             }
             Spacer(modifier = Modifier.height(spacer.spaceExtraSmall))
             var spinnerText  by remember {
-                mutableStateOf("AllNotes")
+                mutableStateOf("All")
             }
             Row(
                 modifier = Modifier
@@ -174,25 +178,23 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 DropdownMenuSpinner(
-                    dropMenuItems = listOf(
-                        "AllNotes",
-                        "Japanese",
-                        "English",
-                        "Chinese",
-                        "Shop",
-                    ),
+                    dropMenuItems = viewModel.state.storages,
                     isDrop = expanded,
                     onDismissRequest = {
                        expanded = false
                     },
                     onDropItemSelected = {
-                        spinnerText = it
+                        spinnerText = it.name
                         expanded = false
-
+                        if (it.id == -1){
+                            viewModel.onEvent(HomeEvent.GetAllVocabularyNotes)
+                        }else{
+                            viewModel.onEvent(HomeEvent.GetNotesByStorageId(it.storageId))
+                        }
                     }
                 )
-
                 TitleText(
+                    modifier = Modifier.weight(1f),
                     text = spinnerText
                 )
                 Spacer(modifier = Modifier.width(spacer.spaceExtraSmall))
@@ -205,16 +207,17 @@ fun HomeScreen(
 
             }
 
-//            LazyColumn{
-//                items(viewModel.state.notes){ note ->
-//                    VocabularyNoteItem(
-//                        vocabularyNote = note,
-//                        onItemClick = {
+            LazyColumn{
+                items(viewModel.state.notes){note ->
+                    VocabularyNoteItem(
+                        vocabularyNote = note,
+                        onItemClick = {
 //                            onNavigationToAddEdit(it)
-//                        }
-//                    )
-//                }
-//            }
+                        }
+                    )
+
+                }
+            }
 
         }
     }

@@ -7,16 +7,20 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lihan.vocabularynote.feature.home.domain.use_cases.VocabularyNoteUseCases
+import com.lihan.vocabularynote.feature.storage.domain.use_cases.StorageUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val vocabularyNoteUseCases: VocabularyNoteUseCases
+    private val vocabularyNoteUseCases: VocabularyNoteUseCases,
+    private val storageUseCases: StorageUseCases
 ) : ViewModel() {
 
     private var getVocabularyNotesJob: Job? = null
@@ -25,32 +29,32 @@ class HomeViewModel @Inject constructor(
         private set
 
     init {
-        getData()
-    }
+        onEvent(HomeEvent.GetAllStorage)
+        onEvent(HomeEvent.GetAllVocabularyNotes)
+        if (state.storages.isNotEmpty()){
+            onEvent(HomeEvent.GetNotesByStorageId(storageId = state.storages[0].storageId))
+        }
 
-    private fun getData(){
-        getVocabularyNotesJob?.cancel()
-        getVocabularyNotesJob = vocabularyNoteUseCases.getVocabularyNotes.invoke()
-            .onEach {
-                state = state.copy(
-                    notes = it
-                )
-            }
-            .launchIn(viewModelScope)
     }
-
     fun onEvent(event: HomeEvent) {
         when (event) {
-            is HomeEvent.GetNotes -> {
-                getData()
-            }
-            is HomeEvent.SortByColor ->{
-                val data = state.notes
-                state = state.copy(
-                    notes = data.filter { note ->
-                        note.type == event.color.toArgb()
+            is HomeEvent.GetAllStorage->{
+                viewModelScope.launch {
+                    storageUseCases.getStorages.invoke().collectLatest {
+                        state = state.copy(
+                            storages = it
+                        )
                     }
-                )
+                }
+            }
+            is HomeEvent.GetNotesByStorageId -> {
+                viewModelScope.launch {
+                    vocabularyNoteUseCases.getVocabularyByStorageId(event.storageId).collectLatest {
+                        state = state.copy(
+                            notes = it
+                        )
+                    }
+                }
             }
             is HomeEvent.SearchByString ->{
                 val data = state.notes
@@ -61,12 +65,16 @@ class HomeViewModel @Inject constructor(
                                     note.word.contains(event.string) },
                         searchText = event.string
                     )
-                }
-                else{
-                    getData()
-                    state = state.copy(
-                        searchText = ""
-                    )
+                }else{
+                    viewModelScope.launch {
+                        vocabularyNoteUseCases.getVocabularyNotes.invoke().collectLatest {
+                            state = state.copy(
+                                notes = it,
+                                searchText = ""
+                            )
+                        }
+                    }
+
                 }
             }
 
@@ -76,10 +84,19 @@ class HomeViewModel @Inject constructor(
                 )
             }
 
-
+            is HomeEvent.GetAllVocabularyNotes->{
+                viewModelScope.launch {
+                    vocabularyNoteUseCases.getVocabularyNotes.invoke().collectLatest {
+                        state = state.copy(
+                            notes = it
+                        )
+                    }
+                }
             }
 
         }
+
+    }
 
 }
 
