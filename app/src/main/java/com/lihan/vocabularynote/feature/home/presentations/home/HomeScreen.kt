@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.R
+import com.lihan.vocabularynote.core.data.preferences.DefaultPreferences
 import com.lihan.vocabularynote.feature.home.presentations.home.components.DropdownMenuSpinner
 import com.lihan.vocabularynote.feature.home.presentations.home.components.MultipleActionItem
 import com.lihan.vocabularynote.feature.home.presentations.home.components.MultipleFloatingActionButton
@@ -36,7 +37,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    onNavigation : (String) -> Unit
+    onNavigation : (String) -> Unit,
 ) {
     val spacer = LocalSpacing.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -46,12 +47,20 @@ fun HomeScreen(
     var expanded by remember {
         mutableStateOf(false)
     }
-
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = modifier.fillMaxSize(),
         drawerContent = {
-             DrawerHeader()
+             DrawerHeader(
+                 userName = viewModel.state.userName,
+                 userIcon = viewModel.state.userIcon,
+                 onSaveName = {
+                 viewModel.onEvent(HomeEvent.SaveUserName(it))
+                 },
+                 onSelectedImage = {
+                     viewModel.onEvent(HomeEvent.SaveUserIcon(it))
+                 }
+             )
              DrawerBody(items = listOf(
                  DrawerItem(
                      imageVector = Icons.Default.Home,

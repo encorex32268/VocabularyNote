@@ -7,31 +7,57 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.core.domain.model.User
+import com.lihan.vocabularynote.feature.storage.presentations.edit.StorageEditEvent
 
 
 @Composable
 fun DrawerHeader(
-    modifier: Modifier = Modifier,
-    user : User?=null,
-    imageSize : Dp = 70.dp
+    modifier: Modifier = Modifier ,
+    imageSize : Dp = 70.dp,
+    onSaveName : (String) -> Unit = {},
+    onSelectedImage : (Int) -> Unit ={},
+    userName : String = "",
+    userIcon : Int = User.icons[0],
+    textStyle: TextStyle = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        textAlign = TextAlign.Center
+    )
 ) {
     val spacer = LocalSpacing.current
+    val focusManager = LocalFocusManager.current
+    var mUserName by remember{
+        mutableStateOf(userName)
+    }
+    var isEditMode by remember {
+        mutableStateOf(false)
+    }
     Box (
         modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
@@ -39,7 +65,7 @@ fun DrawerHeader(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = spacer.spaceLarge , bottom = spacer.spaceLarge)
+                .padding(top = spacer.spaceLarge, bottom = spacer.spaceLarge)
             ,
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -47,21 +73,60 @@ fun DrawerHeader(
             Image(
                 modifier = Modifier
                     .size(imageSize)
-                    .clip(CircleShape)
-                    .border(
-                        width = 2.dp, color = Color.Black, CircleShape
-                    )
+                    .clickable {
+                        onSelectedImage(userIcon)
+                    }
                 ,
-                imageVector = ImageVector.vectorResource(id = user?.image?: R.drawable.ic_launcher_background),
-                contentDescription = "${user?.name} icon"
+                painter = painterResource(id = userIcon),
+                contentDescription = "UserIcon"
             )
-            Spacer(modifier = Modifier.height(spacer.spaceSmall))
-            Text(
-                text = "Lee",
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp
-            )
-            Spacer(modifier = Modifier.height(spacer.spaceSmall))
+            Spacer(modifier = Modifier.height(spacer.spaceMedium))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                    isEditMode = !isEditMode
+                },
+                contentAlignment = Alignment.Center
+            ){
+                if (isEditMode){
+                    TextField(
+                        modifier = Modifier.onFocusChanged {
+                            if(!it.hasFocus){
+                                onSaveName(mUserName)
+                            }
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = Color.White
+                        ),
+                        maxLines = 1,
+                        singleLine = true,
+                        textStyle = textStyle,
+                        value = mUserName,
+                        onValueChange = {
+                            mUserName = it
+                        },
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                isEditMode = false
+                                onSaveName(mUserName)
+                                focusManager.clearFocus()
+                            }
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
+                    )
+
+                }else{
+                    Text(
+                        text = mUserName,
+                        style = textStyle
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(spacer.spaceLarge))
             Divider(
                 modifier = Modifier.fillMaxWidth(),
                 thickness = 2.dp,

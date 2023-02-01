@@ -1,6 +1,14 @@
 package com.lihan.vocabularynote.core.domain.model
 
-data class User(
-    val image : Int ,
-    val name : String
-)
+import com.lihan.vocabularynote.R
+
+object User{
+
+    val icons = listOf(
+        R.drawable.icon_user_default,
+        R.drawable.icon_user_man,
+        R.drawable.icon_user_woman,
+    )
+
+}
+

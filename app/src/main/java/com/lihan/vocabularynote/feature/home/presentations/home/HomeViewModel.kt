@@ -6,6 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.vocabularynote.core.data.preferences.DefaultPreferences
+import com.lihan.vocabularynote.core.domain.model.User
+import com.lihan.vocabularynote.core.domain.repository.Preferences
 import com.lihan.vocabularynote.feature.home.domain.use_cases.VocabularyNoteUseCases
 import com.lihan.vocabularynote.feature.storage.domain.use_cases.StorageUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,10 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val vocabularyNoteUseCases: VocabularyNoteUseCases,
-    private val storageUseCases: StorageUseCases
+    private val storageUseCases: StorageUseCases,
+    private val preferences: Preferences
 ) : ViewModel() {
-
-    private var getVocabularyNotesJob: Job? = null
 
     var state by mutableStateOf(HomeState())
         private set
@@ -31,6 +33,10 @@ class HomeViewModel @Inject constructor(
     init {
         onEvent(HomeEvent.GetAllStorage)
         onEvent(HomeEvent.GetAllVocabularyNotes)
+        state = state.copy(
+            userIcon = preferences.getUserIcon(),
+            userName = preferences.getUserName()
+        )
         if (state.storages.isNotEmpty()){
             onEvent(HomeEvent.GetNotesByStorageId(storageId = state.storages[0].storageId))
         }
@@ -92,6 +98,19 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+            is HomeEvent.SaveUserName->{
+                state = state.copy(
+                    userName = event.name
+                )
+                preferences.saveUserName(event.name)
+            }
+            is HomeEvent.SaveUserIcon->{
+                val newUserIcon = User.icons.filter { it != event.resId }.random()
+                state = state.copy(
+                    userIcon = newUserIcon
+                )
+                preferences.saveUserIcon(newUserIcon)
             }
 
         }
