@@ -1,5 +1,6 @@
 package com.lihan.vocabularynote.feature.home.presentations.add
 
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -17,11 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -37,8 +41,10 @@ fun InsertEditScreen(
     navController: NavController,
     viewModel : InsertEditViewModel = hiltViewModel(),
     storageId : Int = -1,
-    onTagAddClicked : () -> Unit
-) {
+    onTagAddClicked : () -> Unit,
+    typeCircleSize: Dp = 40.dp,
+
+    ) {
     val spacer = LocalSpacing.current
 
     var isEditPage by remember {
@@ -48,7 +54,7 @@ fun InsertEditScreen(
     val (first, second,third) = FocusRequester.createRefs()
     val focusManager = LocalFocusManager.current
     val dialogWidth = LocalConfiguration.current.screenWidthDp.dp / 2
-
+    val state = viewModel.state
     LaunchedEffect(key1 = noteId){
         if (noteId != -1){
             isEditPage = true
@@ -145,39 +151,52 @@ fun InsertEditScreen(
                         )
                 ) {
 
-                    Box(modifier = Modifier
-                        .padding(spacer.spaceSmall)
-                        .size(40.dp)
-                        .background(
-                            color = Color(viewModel.state.vocabularyNote?.type ?: 0),
-                            shape = CircleShape
-                        )
-                        .clickable {
-                            expanded = !expanded
-                        }
+                    Canvas(modifier = Modifier
+                        .padding(spacer.spaceMedium)
+                        .size(typeCircleSize)
                         .align(Alignment.TopStart)
-                    ) {
-                        if (expanded){
-                            TagDialog(
-                                modifier = Modifier
-                                    .background(Color.White)
-                                    .width(dialogWidth)
-                                ,
-                                isShow = expanded,
-                                tags = viewModel.state.tags,
-                                onAddTagClicked = {
-                                    expanded = false
-                                    onTagAddClicked()
-                                },
-                                onTagItemClicked = {
-                                    expanded = false
-                                    viewModel.onEvent(InsertEditEvent.TypeColorChanged(it.color))
-                                }
-                            )
-
+                        .pointerInput(true) {
+                            detectTapGestures {
+                                expanded = !expanded
+                            }
                         }
+                    ){
+                        var type = 0
+                        state.vocabularyNote?.let {
+                            type = it.type
+                        }
+                        drawCircle(
+                            color = if (type == 0) Color.Black else Color(type),
+                            radius = typeCircleSize.toPx() / 2,
+                            style = if (type == 0){
+                                Stroke(
+                                    width = 1f
+                                )
+                            }else{
+                                Fill
+                            }
+                        )
+                    }
+                    if (expanded){
+                        TagDialog(
+                            modifier = Modifier
+                                .background(Color.White)
+                                .width(dialogWidth)
+                            ,
+                            isShow = expanded,
+                            tags = viewModel.state.tags,
+                            onAddTagClicked = {
+                                expanded = false
+                                onTagAddClicked()
+                            },
+                            onTagItemClicked = {
+                                expanded = false
+                                viewModel.onEvent(InsertEditEvent.TypeColorChanged(it.color))
+                            }
+                        )
 
                     }
+
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()

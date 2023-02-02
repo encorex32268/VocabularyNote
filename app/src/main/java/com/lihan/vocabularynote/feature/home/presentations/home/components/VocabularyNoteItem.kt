@@ -47,7 +47,6 @@ fun VocabularyNoteItem(
     isShowEdit: Boolean = false,
     onEditClick: (() -> Unit?)? =null
 ) {
-    Log.d("TAG", "VocabularyNoteItem: ${vocabularyNote.type}")
     val spacer = LocalSpacing.current
     var rotated by remember {
         mutableStateOf(false)

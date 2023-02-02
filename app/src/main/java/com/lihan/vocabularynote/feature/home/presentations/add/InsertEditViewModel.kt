@@ -29,20 +29,19 @@ class InsertEditViewModel @Inject constructor(
 
     private var currentNoteId: Int? = null
 
-
-
     var state by  mutableStateOf(
         InsertEditState(
             vocabularyNote = VocabularyNote(
                 id = currentNoteId,
-                type =preferences.loadUserColorWhenAdd().toArgb(),
+                type =preferences.loadUserColorWhenAdd(),
                 word = "",
                 hiraganaOrKatakana = "",
                 roma = "",
                 createDate = Instant.now().toEpochMilli(),
                 explain = "",
                 storageId = 0
-            )
+            ),
+            color = 0
         )
 
     )

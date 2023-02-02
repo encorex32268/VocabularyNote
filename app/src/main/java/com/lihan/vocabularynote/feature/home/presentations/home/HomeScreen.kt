@@ -15,8 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.lihan.vocabularynote.BuildConfig
 import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.data.preferences.DefaultPreferences
 import com.lihan.vocabularynote.feature.home.presentations.home.components.DropdownMenuSpinner
@@ -74,14 +77,6 @@ fun HomeScreen(
                      imageVector = Icons.Default.Tag,
                      name = Route.TAG
                  ),
-                 DrawerItem(
-                     imageVector = Icons.Default.Info,
-                     name = Route.INFO
-                 ),
-                 DrawerItem(
-                     imageVector = Icons.Default.Settings,
-                     name = Route.SETTINGS
-                 )
              ), onItemClick = {
                  if(it.name == Route.HOME){
                      scope.launch {
@@ -92,34 +87,36 @@ fun HomeScreen(
                      onNavigation(it.name)
                  }
              })
+
+
         },
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
-        floatingActionButton = {
-            MultipleFloatingActionButton(
-                multipleActionItems = listOf(
-                    MultipleActionItem(
-                        name = Route.ADD_EDIT,
-                        icon = Icons.Default.Add
-                    ),
-                    MultipleActionItem(
-                        name = Route.EXAM,
-                        icon = Icons.Default.List
-                    )
-
-                ),
-                onFloatingButtonClick = {
-                    when(it.name){
-                        Route.EXAM->{
-                            onNavigation(Route.EXAM)
-                        }
-                        Route.ADD_EDIT->{
-                            focusManager.clearFocus()
-                            onNavigation(Route.ADD_EDIT)
-                        }
-                    }
-                }
-            )
-        }
+//        floatingActionButton = {
+//            MultipleFloatingActionButton(
+//                multipleActionItems = listOf(
+//                    MultipleActionItem(
+//                        name = Route.ADD_EDIT,
+//                        icon = Icons.Default.Add
+//                    ),
+//                    MultipleActionItem(
+//                        name = Route.EXAM,
+//                        icon = Icons.Default.List
+//                    )
+//
+//                ),
+//                onFloatingButtonClick = {
+//                    when(it.name){
+//                        Route.EXAM->{
+//                            onNavigation(Route.EXAM)
+//                        }
+//                        Route.ADD_EDIT->{
+//                            focusManager.clearFocus()
+//                            onNavigation(Route.ADD_EDIT)
+//                        }
+//                    }
+//                }
+//            )
+//        }
     ) {
         Column (
             modifier = modifier.fillMaxSize()
@@ -220,9 +217,7 @@ fun HomeScreen(
                 items(viewModel.state.notes){note ->
                     VocabularyNoteItem(
                         vocabularyNote = note,
-                        onItemClick = {
-//                            onNavigationToAddEdit(it)
-                        }
+                        onItemClick = {}
                     )
 
                 }

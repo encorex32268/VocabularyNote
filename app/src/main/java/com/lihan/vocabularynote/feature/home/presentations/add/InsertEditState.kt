@@ -6,5 +6,6 @@ import com.lihan.vocabularynote.feature.tag.domain.model.Tag
 data class InsertEditState(
     val storageId : Int = -1,
     val vocabularyNote: VocabularyNote ?= null,
-    val tags : List<Tag> = emptyList()
+    val tags : List<Tag> = emptyList(),
+    val color : Int = 0
 )

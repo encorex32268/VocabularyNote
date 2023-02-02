@@ -182,38 +182,38 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        composable(
-                            route = Route.INFO
-                        ) {
-                            InfoScreen(
-                                onCloseButtonClicked = {
-                                    navController.navigate(
-                                        route = Route.HOME,
-                                        navOptions = NavOptions.Builder().setPopUpTo(
-                                            route = Route.HOME,
-                                            inclusive = true,
-                                            saveState = false
-                                        ).build()
-                                    )
-                                }
-                            )
-                        }
-                        composable(
-                            route = Route.SETTINGS
-                        ) {
-                            SettingsScreen(
-                                onCloseButtonClicked = {
-                                    navController.navigate(
-                                        route = Route.HOME,
-                                        navOptions = NavOptions.Builder().setPopUpTo(
-                                            route = Route.HOME,
-                                            inclusive = true,
-                                            saveState = false
-                                        ).build()
-                                    )
-                                }
-                            )
-                        }
+//                        composable(
+//                            route = Route.INFO
+//                        ) {
+//                            InfoScreen(
+//                                onCloseButtonClicked = {
+//                                    navController.navigate(
+//                                        route = Route.HOME,
+//                                        navOptions = NavOptions.Builder().setPopUpTo(
+//                                            route = Route.HOME,
+//                                            inclusive = true,
+//                                            saveState = false
+//                                        ).build()
+//                                    )
+//                                }
+//                            )
+//                        }
+//                        composable(
+//                            route = Route.SETTINGS
+//                        ) {
+//                            SettingsScreen(
+//                                onCloseButtonClicked = {
+//                                    navController.navigate(
+//                                        route = Route.HOME,
+//                                        navOptions = NavOptions.Builder().setPopUpTo(
+//                                            route = Route.HOME,
+//                                            inclusive = true,
+//                                            saveState = false
+//                                        ).build()
+//                                    )
+//                                }
+//                            )
+//                        }
                     }
 
                 }

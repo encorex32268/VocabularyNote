@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.lihan.vocabularynote.BuildConfig
 import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.core.domain.model.User
@@ -85,8 +86,8 @@ fun DrawerHeader(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                    isEditMode = !isEditMode
-                },
+                        isEditMode = !isEditMode
+                    },
                 contentAlignment = Alignment.Center
             ){
                 if (isEditMode){
@@ -146,38 +147,51 @@ fun DrawerBody(
     onItemClick : (DrawerItem) -> Unit
 ) {
     val spacer = LocalSpacing.current
-    LazyColumn{
-        items(items){ drawerItem->
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        onItemClick(drawerItem)
-                    }
-            ) {
-                Row (
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        LazyColumn{
+            items(items){ drawerItem->
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(spacer.spaceMedium)
-                ){
-                    Image(
-                        modifier = Modifier.weight(2f),
-                        imageVector = drawerItem.imageVector,
-                        contentDescription = drawerItem.name
-                    )
-                    Spacer(modifier = Modifier.width(LocalSpacing.current.spaceMedium))
-                    Text(
-                        modifier = Modifier.weight(8f),
-                        text = drawerItem.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp
-                    )
+                        .clickable {
+                            onItemClick(drawerItem)
+                        }
+                ) {
+                    Row (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(spacer.spaceMedium)
+                    ){
+                        Image(
+                            modifier = Modifier.weight(2f),
+                            imageVector = drawerItem.imageVector,
+                            contentDescription = drawerItem.name
+                        )
+                        Spacer(modifier = Modifier.width(LocalSpacing.current.spaceMedium))
+                        Text(
+                            modifier = Modifier.weight(8f),
+                            text = drawerItem.name,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
+                        )
+                    }
+                    Divider(color = Color.LightGray)
                 }
-                Divider(color = Color.LightGray)
-            }
-            Spacer(modifier = Modifier.height(spacer.spaceSmall))
+                Spacer(modifier = Modifier.height(spacer.spaceSmall))
 
+            }
         }
+        Text(
+            modifier = Modifier.padding(spacer.spaceMedium).align(Alignment.BottomCenter),
+            text = "Version : ${BuildConfig.VERSION_NAME}",
+            style = TextStyle(
+                 fontWeight = FontWeight.SemiBold,
+                 fontSize = 16.sp,
+                 textAlign = TextAlign.Center
+            )
+        )
     }
 
 }
