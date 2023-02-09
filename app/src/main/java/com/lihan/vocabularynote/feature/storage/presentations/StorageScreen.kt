@@ -100,7 +100,8 @@ fun StorageScreen(
                     onFocusChanged = {
                         viewModel.onEvent(StorageEvent.ChangeHintVisible(it.isFocused))
                     },
-                    shouldShowHint = viewModel.storageState.isHintVisible
+                    shouldShowHint = viewModel.storageState.isHintVisible,
+                    hintText = "Search Storage..."
                 )
             }
             Spacer(modifier = Modifier.height(spacer.spaceSmall))
@@ -137,7 +138,6 @@ fun StorageScreen(
                     }
                 }
                 items(viewModel.storageState.items){ storage ->
-                    Log.d("TAG", "StorageScreen: ${storage}")
                     StorageItem(
                         storage = storage,
                         onClick = {

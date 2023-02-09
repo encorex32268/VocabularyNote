@@ -54,7 +54,9 @@ class StorageViewModel @Inject constructor(
                 refreshData()
             }
             is StorageEvent.ChangeHintVisible->{
-
+                storageState = storageState.copy(
+                    isHintVisible = !event.visible && storageState.searchText.isBlank()
+                )
             }
             is StorageEvent.InsertStorage->{
                 viewModelScope.launch {
