@@ -17,7 +17,7 @@ interface StorageDao {
     @Query("select * from StorageEntity")
     fun getAllStorage() : Flow<List<StorageEntity>>
 
-    @Query("delete from StorageEntity where id = :storageId")
+    @Query("delete from StorageEntity where storageId = :storageId")
     suspend fun deleteStorage(storageId : Int)
 
     @Query("select * from StorageEntity where id = :storageId")

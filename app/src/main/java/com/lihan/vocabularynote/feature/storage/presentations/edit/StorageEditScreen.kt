@@ -24,10 +24,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.core.ui.LocalSpacing
+import com.lihan.vocabularynote.core.util.UiEvent
 import com.lihan.vocabularynote.feature.home.presentations.home.components.MultipleActionItem
 import com.lihan.vocabularynote.feature.home.presentations.home.components.MultipleFloatingActionButton
 import com.lihan.vocabularynote.feature.home.presentations.home.components.VocabularyNoteItem
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
+import kotlinx.coroutines.flow.collectLatest
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -43,10 +45,20 @@ fun StorageEditScreen(
     val spacer = LocalSpacing.current
     val focusManager = LocalFocusManager.current
     val state = viewModel.state
+    var isShowDialog by remember {
+        mutableStateOf(false)
+    }
     LaunchedEffect(key1 = storage.storageId){
         viewModel.apply {
             onEvent(StorageEditEvent.GetVocabularyByStorageId(storageId = storage.storageId))
             onEvent(StorageEditEvent.InitStorage(storage = storage))
+        }
+    }
+    LaunchedEffect(key1 = true){
+        viewModel.uiEvent.collectLatest {
+            if (it is UiEvent.Success){
+                onCloseButtonClicked()
+            }
         }
     }
 
@@ -83,8 +95,7 @@ fun StorageEditScreen(
                     .size(64.dp)
                     .align(End),
                 onClick = {
-                    viewModel.onEvent(StorageEditEvent.DeleteStorage(storage.storageId))
-                    onCloseButtonClicked()
+                    isShowDialog = true
                 }
             ) {
                 Icon(
@@ -92,6 +103,36 @@ fun StorageEditScreen(
                     contentDescription = "StorageEditDelete"
                 )
             }
+            if (isShowDialog){
+                AlertDialog(
+                    onDismissRequest = {
+                         isShowDialog = false
+                    },
+                    title = {
+                        Text(text = "Sure")
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            isShowDialog = false
+                            viewModel.onEvent(StorageEditEvent.DeleteStorage(storage.storageId))
+                        }) {
+                            Text(text = "Ok")
+                        }
+                    },
+                    text = {
+                        Text(text = "Do you want to delete it ?")
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            isShowDialog = false
+                        }) {
+                            Text(text = "Cancel")
+                        }
+                    }
+                )
+
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

@@ -28,6 +28,10 @@ class VocabularyNoteRepositoryImpl(
         dao.deleteVocabularyNote(noteId)
     }
 
+    override suspend fun deleteVocabularyNoteByStorageId(storageId: Int) {
+        dao.deleteVocabularyNoteByStorageId(storageId)
+    }
+
     override suspend fun updateVocabularyNote(vocabularyNote: VocabularyNote) {
         dao.updateVocabularyNote(vocabularyNote.toVocabularyEntity())
     }

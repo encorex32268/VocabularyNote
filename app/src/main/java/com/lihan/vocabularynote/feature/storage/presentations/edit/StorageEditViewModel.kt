@@ -6,13 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.vocabularynote.core.util.UiEvent
 import com.lihan.vocabularynote.feature.home.domain.use_cases.VocabularyNoteUseCases
 import com.lihan.vocabularynote.feature.storage.domain.use_cases.StorageUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,7 +23,8 @@ class StorageEditViewModel @Inject constructor(
 )  : ViewModel(){
 
     var state by mutableStateOf(StorageEditState())
-
+    private val _uiEvent = Channel<UiEvent>()
+    var uiEvent = _uiEvent.receiveAsFlow()
 
     fun onEvent(event: StorageEditEvent){
         when(event){
@@ -80,7 +80,9 @@ class StorageEditViewModel @Inject constructor(
             }
             is StorageEditEvent.DeleteStorage->{
                 viewModelScope.launch {
+                    vocabularyNoteUseCases.deleteVocabularyNoteByStorageId(event.storageId)
                     storageUseCases.deleteStorage(event.storageId)
+                    _uiEvent.send(UiEvent.Success)
                 }
             }
 

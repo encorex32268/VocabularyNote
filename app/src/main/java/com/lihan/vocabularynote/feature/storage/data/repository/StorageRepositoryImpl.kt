@@ -1,5 +1,6 @@
 package com.lihan.vocabularynote.feature.storage.data.repository
 
+import android.util.Log
 import com.lihan.vocabularynote.feature.storage.data.StorageDao
 import com.lihan.vocabularynote.feature.storage.data.toStorage
 import com.lihan.vocabularynote.feature.storage.data.toStorageEntity

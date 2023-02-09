@@ -6,5 +6,6 @@ class VocabularyNoteUseCases(
     val deleteVocabularyNote: DeleteVocabularyNote,
     val insertEditVocabularyNote: InsertEditVocabularyNote,
     val getVocabularyByStorageId: GetVocabularyByStorageId,
-    val updateVocabularyNote: UpdateVocabularyNote
+    val updateVocabularyNote: UpdateVocabularyNote,
+    val deleteVocabularyNoteByStorageId: DeleteVocabularyNoteByStorageId
 )

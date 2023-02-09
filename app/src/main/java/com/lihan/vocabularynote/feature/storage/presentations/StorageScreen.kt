@@ -137,6 +137,7 @@ fun StorageScreen(
                     }
                 }
                 items(viewModel.storageState.items){ storage ->
+                    Log.d("TAG", "StorageScreen: ${storage}")
                     StorageItem(
                         storage = storage,
                         onClick = {

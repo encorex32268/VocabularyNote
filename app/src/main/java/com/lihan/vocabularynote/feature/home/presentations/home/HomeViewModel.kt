@@ -1,5 +1,6 @@
 package com.lihan.vocabularynote.feature.home.presentations.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -33,6 +34,7 @@ class HomeViewModel @Inject constructor(
     init {
         onEvent(HomeEvent.GetAllStorage)
         onEvent(HomeEvent.GetAllVocabularyNotes)
+        Log.d("TAG", ": ${preferences.getUserIcon()}")
         state = state.copy(
             userIcon = preferences.getUserIcon(),
             userName = preferences.getUserName()

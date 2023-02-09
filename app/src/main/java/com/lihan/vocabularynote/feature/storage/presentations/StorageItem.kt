@@ -40,7 +40,7 @@ fun StorageItem(
         ){
             Image(
                 modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.drawable.icon_folder),
+                painter = painterResource(id = R.drawable.icon_folder_storage),
                 contentDescription = ""
             )
         }

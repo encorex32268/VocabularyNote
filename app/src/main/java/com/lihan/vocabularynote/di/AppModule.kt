@@ -59,7 +59,8 @@ object AppModule {
             DeleteVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),
             InsertEditVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),
             GetVocabularyByStorageId(vocabularyNoteRepository = vocabularyNoteRepository),
-            UpdateVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository)
+            UpdateVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),
+            DeleteVocabularyNoteByStorageId(vocabularyNoteRepository = vocabularyNoteRepository )
         )
     }
 
