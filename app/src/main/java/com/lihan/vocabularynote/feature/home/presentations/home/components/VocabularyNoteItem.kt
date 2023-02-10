@@ -125,27 +125,36 @@ fun VocabularyNoteItem(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    val isShowSmallHiraganaText =
-                        vocabularyNote.hiraganaOrKatakana.isNotBlank() &&
-                                vocabularyNote.word.isNotBlank()
-                    if (isShowSmallHiraganaText) {
-                        Text(
-                            text = vocabularyNote.hiraganaOrKatakana,
-                            fontSize = hiraganaFontSize,
-                            fontWeight = FontWeight.Light
-                        )
-                        Spacer(modifier = Modifier.height(spacer.spaceExtraTooSmall))
-                        Text(
-                            text = vocabularyNote.word,
-                            fontSize = wordFontSize,
-                            fontWeight = FontWeight.Bold
-                        )
-                    } else {
-                        Text(
-                            text = vocabularyNote.hiraganaOrKatakana,
-                            fontSize = hiraganaFontSize,
-                            fontWeight = FontWeight.Bold
-                        )
+                    val hiragana = vocabularyNote.hiraganaOrKatakana.trim()
+                    val word = vocabularyNote.word.trim()
+                    when{
+                        hiragana.isNotBlank() && word.isNotBlank() ->{
+                            Text(
+                                text = vocabularyNote.hiraganaOrKatakana,
+                                fontSize = hiraganaFontSize,
+                                fontWeight = FontWeight.Light
+                            )
+                            Spacer(modifier = Modifier.height(spacer.spaceExtraTooSmall))
+                            Text(
+                                text = vocabularyNote.word,
+                                fontSize = wordFontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        hiragana.isNotBlank()->{
+                            Text(
+                                text = vocabularyNote.hiraganaOrKatakana,
+                                fontSize = hiraganaFontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                        word.isNotBlank()->{
+                            Text(
+                                text = vocabularyNote.word,
+                                fontSize = wordFontSize,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
 

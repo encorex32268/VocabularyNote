@@ -110,8 +110,7 @@ object AppModule {
             getStorageById = GetStorageById(storageRepository),
             getStorages = GetStorages(storageRepository),
             insertStorage = InsertStorage(storageRepository),
-            updateStorage = UpdateStorage(storageRepository),
-            getStorageByName = GetStorageByName(storageRepository)
+            updateStorage = UpdateStorage(storageRepository)
         )
     }
 

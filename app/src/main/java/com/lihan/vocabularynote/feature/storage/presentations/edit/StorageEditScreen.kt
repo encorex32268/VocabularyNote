@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -44,14 +45,12 @@ fun StorageEditScreen(
 ) {
     val spacer = LocalSpacing.current
     val focusManager = LocalFocusManager.current
-    val state = viewModel.state
     var isShowDialog by remember {
         mutableStateOf(false)
     }
     LaunchedEffect(key1 = storage.storageId){
         viewModel.apply {
-            onEvent(StorageEditEvent.GetVocabularyByStorageId(storageId = storage.storageId))
-            onEvent(StorageEditEvent.InitStorage(storage = storage))
+            onEvent(StorageEditEvent.GetStorage(storageId = storage.storageId))
         }
     }
     LaunchedEffect(key1 = true){
@@ -67,6 +66,7 @@ fun StorageEditScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
+                    viewModel.onEvent(StorageEditEvent.UpdateStorage)
                     onNewVocabularyNoteClicked(storage.storageId)
                 }) {
                 Icon(

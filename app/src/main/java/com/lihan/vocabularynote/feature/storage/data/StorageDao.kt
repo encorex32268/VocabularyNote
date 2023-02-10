@@ -20,10 +20,10 @@ interface StorageDao {
     @Query("delete from StorageEntity where storageId = :storageId")
     suspend fun deleteStorage(storageId : Int)
 
-    @Query("select * from StorageEntity where id = :storageId")
+    @Query("select * from StorageEntity where storageId = :storageId")
     suspend fun getStorageById(storageId: Int) : StorageEntity?
 
-    @Update
+    @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateStorage(storageEntity: StorageEntity)
 
      @Query("select * from StorageEntity where name like :searchText ")

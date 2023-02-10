@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lihan.vocabularynote.core.util.UiEvent
 import com.lihan.vocabularynote.feature.home.domain.use_cases.VocabularyNoteUseCases
+import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 import com.lihan.vocabularynote.feature.storage.domain.use_cases.StorageUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -28,17 +29,6 @@ class StorageEditViewModel @Inject constructor(
 
     fun onEvent(event: StorageEditEvent){
         when(event){
-            is StorageEditEvent.GetVocabularyByStorageId->{
-                viewModelScope.launch {
-                    vocabularyNoteUseCases.getVocabularyByStorageId
-                        .invoke(event.storageId)
-                        .collectLatest {
-                            state = state.copy(
-                                items = it
-                        )
-                    }
-                }
-            }
             is StorageEditEvent.DeleteVocabulary->{
                 viewModelScope.launch {
                     vocabularyNoteUseCases.deleteVocabularyNote(event.noteId)
@@ -59,10 +49,17 @@ class StorageEditViewModel @Inject constructor(
                     vocabularyNoteUseCases.insertEditVocabularyNote(event.vocabularyNote)
                 }
             }
-            is StorageEditEvent.InitStorage->{
-                state = state.copy(
-                    storage = event.storage,
-                )
+            is StorageEditEvent.GetStorage->{
+                viewModelScope.launch {
+                    vocabularyNoteUseCases.getVocabularyByStorageId
+                        .invoke(event.storageId)
+                        .collectLatest {
+                            state = state.copy(
+                                items = it,
+                                storage = storageUseCases.getStorageById(event.storageId)?: Storage()
+                            )
+                        }
+                }
             }
             is StorageEditEvent.ChangeStorageName->{
                 state = state.copy(
