@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">VocabularyNote</string>
+    <string name="app_version">Version: %1$s</string>
+    <string name="home">Home</string>
+    <string name="home_search_vocabulary">Search Vocabulary…</string>
+    <string name="home_all_storage">All</string>
+    <string name="storage">Storage</string>
+    <string name="storage_search_storage">Search Storage…</string>
+    <string name="storage_add">New</string>
+    <string name="storage_add_title">New Storage</string>
+    <string name="storage_add_description">description…</string>
+    <string name="storage_edit_createAt">CreateAt: %1$s</string>
+    <string name="storage_edit_count">Count: $1$s</string>
+    <string name="storage_edit_delete_dialog_title">Sure</string>
+    <string name="storage_edit_delete_dialog_message">Do you want to delete it ?</string>
+    <string name="storage_edit_delete_dialog_cancel_button">Cancel</string>
+    <string name="storage_edit_delete_dialog_OK_button">OK</string>
+    <string name="tag">Tag</string>
+    <string name="tag_add">NewTag</string>
+
+    <string name="vocabulary_add_phonetics">Phonetics</string>
+    <string name="vocabulary_add_word">Word</string>
+    <string name="vocabulary_add_explain">Explain</string>
 </resources>

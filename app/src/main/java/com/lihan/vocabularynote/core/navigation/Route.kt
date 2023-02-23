@@ -1,5 +1,6 @@
 package com.lihan.vocabularynote.core.navigation
 
+
 object Route {
     const val HOME = "Home"
     const val ADD_EDIT = "add_edit"

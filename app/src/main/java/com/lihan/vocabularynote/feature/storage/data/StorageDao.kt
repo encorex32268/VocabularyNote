@@ -26,7 +26,7 @@ interface StorageDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateStorage(storageEntity: StorageEntity)
 
-     @Query("select * from StorageEntity where name like :searchText ")
+     @Query("select * from StorageEntity where name like '%' || :searchText || '%' ")
      fun getStorageByName(searchText : String) : Flow<List<StorageEntity>>
 
 }

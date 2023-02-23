@@ -3,8 +3,10 @@ package com.lihan.vocabularynote.feature.storage.presentations
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.util.UiEvent
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 import com.lihan.vocabularynote.feature.storage.domain.use_cases.StorageUseCases
@@ -63,8 +65,8 @@ class StorageViewModel @Inject constructor(
                     storageUseCases.insertStorage(
                         Storage(
                             storageId = System.currentTimeMillis().toInt() + 1024,
-                            name = "New Storage",
-                            description = "description...",
+                            name = event.title,
+                            description = event.description,
                             createAt = Instant.now().toEpochMilli()
                         )
                     )

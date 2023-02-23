@@ -1,6 +1,5 @@
 package com.lihan.vocabularynote.feature.tag.presentations
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -17,10 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.core.presentations.componets.TitleText
-import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.feature.tag.domain.model.Tag
 import com.lihan.vocabularynote.feature.tag.presentations.components.TagCard
@@ -63,7 +62,7 @@ fun TagScreen(
                 )
             }
             TitleText(
-                text = Route.TAG
+                text = stringResource(id = com.lihan.vocabularynote.R.string.tag)
             )
             Spacer(modifier = Modifier.height(spacer.spaceSmall))
 

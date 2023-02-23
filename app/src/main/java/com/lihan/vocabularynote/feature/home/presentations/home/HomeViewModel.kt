@@ -64,14 +64,15 @@ class HomeViewModel @Inject constructor(
                 }
             }
             is HomeEvent.SearchByString ->{
-                val data = state.notes
                 if (event.string.isNotBlank()){
-                    state = state.copy(
-                        notes = data.filter { note ->
-                            note.hiraganaOrKatakana.contains(event.string) ||
-                                    note.word.contains(event.string) },
-                        searchText = event.string
-                    )
+                    viewModelScope.launch {
+                        vocabularyNoteUseCases.getVocabularyByText.invoke(event.string).collectLatest {
+                            state = state.copy(
+                                notes = it,
+                                searchText = event.string
+                            )
+                        }
+                    }
                 }else{
                     viewModelScope.launch {
                         vocabularyNoteUseCases.getVocabularyNotes.invoke().collectLatest {

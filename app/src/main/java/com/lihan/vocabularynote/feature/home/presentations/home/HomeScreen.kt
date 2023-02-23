@@ -15,16 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.lihan.vocabularynote.BuildConfig
 import com.lihan.vocabularynote.R
-import com.lihan.vocabularynote.core.data.preferences.DefaultPreferences
 import com.lihan.vocabularynote.feature.home.presentations.home.components.DropdownMenuSpinner
-import com.lihan.vocabularynote.feature.home.presentations.home.components.MultipleActionItem
-import com.lihan.vocabularynote.feature.home.presentations.home.components.MultipleFloatingActionButton
 import com.lihan.vocabularynote.core.presentations.componets.SearchBar
 import com.lihan.vocabularynote.core.presentations.componets.TitleText
 import com.lihan.vocabularynote.feature.home.presentations.home.components.navigationdrawer.DrawerBody
@@ -67,24 +62,27 @@ fun HomeScreen(
              DrawerBody(items = listOf(
                  DrawerItem(
                      imageVector = Icons.Default.Home,
-                     name = Route.HOME
+                     name = stringResource(id = R.string.home),
+                     routeName = Route.HOME
                  ),
                  DrawerItem(
-                     imageVector = Icons.Default.Storage,
-                     name = Route.STORAGE
+                     imageVector = Icons.Default.FolderOpen,
+                     name = stringResource(id = R.string.storage),
+                     routeName = Route.STORAGE
                  ),
                  DrawerItem(
                      imageVector = Icons.Default.Tag,
-                     name = Route.TAG
+                     name = stringResource(id = R.string.tag),
+                     routeName = Route.TAG
                  ),
              ), onItemClick = {
-                 if(it.name == Route.HOME){
+                 if(it.routeName == Route.HOME){
                      scope.launch {
                          scaffoldState.drawerState.close()
                          expanded = false
                      }
                  }else{
-                     onNavigation(it.name)
+                     onNavigation(it.routeName)
                  }
              })
 
@@ -165,13 +163,14 @@ fun HomeScreen(
                         viewModel.onEvent(HomeEvent.ChangeHintVisible(it.isFocused))
                     },
                     shouldShowHint = viewModel.state.isHintVisible,
-                    hintText = "Search Vocabulary..."
+                    hintText = stringResource(id = R.string.home_search_vocabulary)
                 )
 
             }
             Spacer(modifier = Modifier.height(spacer.spaceExtraSmall))
+            val allString = stringResource(id = R.string.home_all_storage)
             var spinnerText  by remember {
-                mutableStateOf("All")
+                mutableStateOf(allString)
             }
             Row(
                 modifier = Modifier

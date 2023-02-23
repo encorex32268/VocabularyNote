@@ -21,8 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.presentations.componets.TitleText
 import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.core.ui.LocalSpacing
@@ -72,7 +74,7 @@ fun StorageScreen(
                 )
             }
             TitleText(
-                text = Route.STORAGE
+                text = stringResource(id = R.string.storage)
             )
             Spacer(modifier = Modifier.height(spacer.spaceSmall))
             Row (
@@ -101,10 +103,12 @@ fun StorageScreen(
                         viewModel.onEvent(StorageEvent.ChangeHintVisible(it.isFocused))
                     },
                     shouldShowHint = viewModel.storageState.isHintVisible,
-                    hintText = "Search Storage..."
+                    hintText = stringResource(id = R.string.storage_search_storage)
                 )
             }
             Spacer(modifier = Modifier.height(spacer.spaceSmall))
+            val title = stringResource(id = R.string.storage_add_title)
+            val description = stringResource(id = R.string.storage_add_description)
             LazyColumn(
                 state = scrollState
             ){
@@ -114,7 +118,12 @@ fun StorageScreen(
                             .fillMaxWidth()
                             .padding(spacer.spaceSmall)
                             .clickable {
-                                viewModel.onEvent(StorageEvent.InsertStorage)
+                                viewModel.onEvent(
+                                    StorageEvent.InsertStorage(
+                                        title = title,
+                                        description = description
+                                    )
+                                )
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -130,7 +139,7 @@ fun StorageScreen(
                                 tint = Color.Black
                             )
                             Text(
-                                text = "New",
+                                text = stringResource(id = R.string.storage_add),
                                 style = MaterialTheme.typography.body2,
                                 color = Color.Black
                             )

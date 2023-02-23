@@ -47,4 +47,12 @@ class VocabularyNoteRepositoryImpl(
             }
         }
     }
+
+    override fun getVocabularyByText(text: String): Flow<List<VocabularyNote>> {
+        return dao.getVocabularyByText(text).map {
+            it.map {
+                it.toVocabularyNote()
+            }
+        }
+    }
 }

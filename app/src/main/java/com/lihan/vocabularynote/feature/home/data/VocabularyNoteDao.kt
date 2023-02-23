@@ -32,4 +32,7 @@ interface VocabularyNoteDao {
 
     @Update
     suspend fun updateVocabularyNote(vocabularyNote: VocabularyNoteEntity)
+
+    @Query("select * from VocabularyNoteEntity where word like  '%' || :text  || '%' or hiraganaOrKatakana like '%' || :text  || '%' ")
+    fun getVocabularyByText(text : String) : Flow<List<VocabularyNoteEntity>>
 }

@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -40,6 +41,7 @@ import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.google.accompanist.insets.imePadding
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.navigationBarsWithImePadding
+import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.core.presentations.componets.DialogColorPicker
 import com.lihan.vocabularynote.core.presentations.componets.TitleText
@@ -95,7 +97,7 @@ fun TagAddScreen(
                 )
             }
             TitleText(
-                text = Route.TAG_ADD_EDIT
+                text = stringResource(id = R.string.tag_add)
             )
             Spacer(modifier = Modifier.height(spacer.spaceExtraLarge))
             Spacer(modifier = Modifier.height(spacer.spaceExtraLarge))

@@ -21,9 +21,11 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.core.util.UiEvent
 import com.lihan.vocabularynote.feature.home.presentations.home.components.MultipleActionItem
@@ -80,28 +82,31 @@ fun StorageEditScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            IconButton(
-                modifier = Modifier
-                    .size(64.dp)
-                    .align(Start),
-                onClick = onCloseButtonClicked) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "StorageEditBack"
-                )
-            }
-            IconButton(
-                modifier = Modifier
-                    .size(64.dp)
-                    .align(End),
-                onClick = {
-                    isShowDialog = true
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "StorageEditDelete"
-                )
+                IconButton(
+                    modifier = Modifier
+                        .size(64.dp),
+                    onClick = onCloseButtonClicked) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "StorageEditBack"
+                    )
+                }
+                IconButton(
+                    modifier = Modifier
+                        .size(64.dp),
+                    onClick = {
+                        isShowDialog = true
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "StorageEditDelete"
+                    )
+                }
             }
             if (isShowDialog){
                 AlertDialog(
@@ -109,24 +114,24 @@ fun StorageEditScreen(
                          isShowDialog = false
                     },
                     title = {
-                        Text(text = "Sure")
+                        Text(text = stringResource(id = R.string.storage_edit_delete_dialog_title))
                     },
                     confirmButton = {
                         TextButton(onClick = {
                             isShowDialog = false
                             viewModel.onEvent(StorageEditEvent.DeleteStorage(storage.storageId))
                         }) {
-                            Text(text = "Ok")
+                            Text(text = stringResource(id = R.string.storage_edit_delete_dialog_OK_button))
                         }
                     },
                     text = {
-                        Text(text = "Do you want to delete it ?")
+                        Text(text = stringResource(id = R.string.storage_edit_delete_dialog_message))
                     },
                     dismissButton = {
                         TextButton(onClick = {
                             isShowDialog = false
                         }) {
-                            Text(text = "Cancel")
+                            Text(text = stringResource(id = R.string.storage_edit_delete_dialog_cancel_button))
                         }
                     }
                 )
@@ -204,10 +209,10 @@ fun StorageEditScreen(
                 ) {
                     Text(
                         modifier = Modifier.weight(1f),
-                        text = "CreateAt: ${getRealTime(storage.createAt)}",
+                        text = stringResource(id = R.string.storage_edit_createAt , getRealTime(storage.createAt)),
                         style = MaterialTheme.typography.body1
                     )
-                    Text(text = "Count:${viewModel.state.items.size}")
+                    Text(text = stringResource(id = R.string.storage_edit_count , viewModel.state.items.size))
                 }
             }
             LazyColumn{

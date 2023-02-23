@@ -55,6 +55,7 @@ object AppModule {
     fun providesVocabularyNoteUseCases(vocabularyNoteRepository: VocabularyNoteRepository) : VocabularyNoteUseCases {
         return VocabularyNoteUseCases(
             GetVocabularyNotes(vocabularyNoteRepository = vocabularyNoteRepository),
+            GetVocabularyByText(vocabularyNoteRepository = vocabularyNoteRepository),
             GetVocabularyByNoteId(vocabularyNoteRepository = vocabularyNoteRepository),
             DeleteVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),
             InsertEditVocabularyNote(vocabularyNoteRepository = vocabularyNoteRepository),

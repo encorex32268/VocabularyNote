@@ -1,5 +1,6 @@
 package com.lihan.vocabularynote.feature.home.presentations.home.components.navigationdrawer
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.os.BuildCompat
 import com.lihan.vocabularynote.BuildConfig
 import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.ui.LocalSpacing
@@ -128,11 +131,7 @@ fun DrawerHeader(
             }
 
             Spacer(modifier = Modifier.height(spacer.spaceLarge))
-            Divider(
-                modifier = Modifier.fillMaxWidth(),
-                thickness = 2.dp,
-                color = Color.Black
-            )
+
         }
 
 
@@ -184,8 +183,10 @@ fun DrawerBody(
             }
         }
         Text(
-            modifier = Modifier.padding(spacer.spaceMedium).align(Alignment.BottomCenter),
-            text = "Version : ${BuildConfig.VERSION_NAME}",
+            modifier = Modifier
+                .padding(spacer.spaceMedium)
+                .align(Alignment.BottomCenter),
+            text = stringResource(id = R.string.app_version, BuildConfig.VERSION_NAME),
             style = TextStyle(
                  fontWeight = FontWeight.SemiBold,
                  fontSize = 16.sp,

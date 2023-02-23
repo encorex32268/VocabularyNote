@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">單字卡</string>
+    <string name="app_version">版本: %1$s</string>
+    <string name="home">首頁</string>
+    <string name="home_search_vocabulary">搜尋單字</string>
+    <string name="home_all_storage">全部</string>
+    <string name="storage">倉庫</string>
+    <string name="storage_search_storage">搜尋倉庫名稱</string>
+    <string name="storage_edit_createAt">創立時間: %1$s</string>
+    <string name="storage_edit_count">數量: %1$s</string>
+    <string name="storage_edit_delete_dialog_title">確認</string>
+    <string name="storage_edit_delete_dialog_message">你想刪除嗎</string>
+    <string name="storage_edit_delete_dialog_cancel_button">取消</string>
+    <string name="storage_edit_delete_dialog_OK_button">確定</string>
+    <string name="tag">標籤</string>
+    <string name="tag_add">新增標籤</string>
+    <string name="vocabulary_add_phonetics">發音</string>
+    <string name="vocabulary_add_word">字</string>
+    <string name="vocabulary_add_explain">解釋</string>
+    <string name="storage_add">新增</string>
+    <string name="storage_add_description">說明</string>
+    <string name="storage_add_title">新的倉庫名稱</string>
+</resources>
