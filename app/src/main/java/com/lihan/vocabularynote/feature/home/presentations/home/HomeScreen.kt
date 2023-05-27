@@ -16,9 +16,11 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.R
+import com.lihan.vocabularynote.core.domain.model.User
 import com.lihan.vocabularynote.feature.home.presentations.home.components.DropdownMenuSpinner
 import com.lihan.vocabularynote.core.presentations.componets.SearchBar
 import com.lihan.vocabularynote.core.presentations.componets.TitleText
@@ -27,15 +29,18 @@ import com.lihan.vocabularynote.feature.home.presentations.home.components.navig
 import com.lihan.vocabularynote.feature.home.presentations.home.components.navigationdrawer.DrawerItem
 import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.core.ui.LocalSpacing
+import com.lihan.vocabularynote.feature.home.domain.model.VocabularyNote
 import com.lihan.vocabularynote.feature.home.presentations.home.components.VocabularyNoteItem
+import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import kotlinx.coroutines.launch
 
 @ExperimentalComposeUiApi
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel(),
     onNavigation : (String) -> Unit,
+    state : HomeState ,
+    onEvent : (HomeEvent) -> Unit
 ) {
     val spacer = LocalSpacing.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -50,13 +55,13 @@ fun HomeScreen(
         modifier = modifier.fillMaxSize(),
         drawerContent = {
              DrawerHeader(
-                 userName = viewModel.state.userName,
-                 userIcon = viewModel.state.userIcon,
+                 userName = state.userName,
+                 userIcon = state.userIcon,
                  onSaveName = {
-                 viewModel.onEvent(HomeEvent.SaveUserName(it))
+                 onEvent(HomeEvent.SaveUserName(it))
                  },
                  onSelectedImage = {
-                     viewModel.onEvent(HomeEvent.SaveUserIcon(it))
+                     onEvent(HomeEvent.SaveUserIcon(it))
                  }
              )
              DrawerBody(items = listOf(
@@ -151,18 +156,18 @@ fun HomeScreen(
                         .padding(spacer.spaceSmall)
                     ,
                     onValueChange = {
-                        viewModel.onEvent(HomeEvent.SearchByString(it))
+                        onEvent(HomeEvent.SearchByString(it))
                     },
                     onSearch = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.onEvent(HomeEvent.SearchByString(viewModel.state.searchText))
+                        onEvent(HomeEvent.SearchByString(state.searchText))
                     },
-                    text = viewModel.state.searchText,
+                    text = state.searchText,
                     onFocusChanged = {
-                        viewModel.onEvent(HomeEvent.ChangeHintVisible(it.isFocused))
+                        onEvent(HomeEvent.ChangeHintVisible(it.isFocused))
                     },
-                    shouldShowHint = viewModel.state.isHintVisible,
+                    shouldShowHint = state.isHintVisible,
                     hintText = stringResource(id = R.string.home_search_vocabulary)
                 )
 
@@ -183,7 +188,7 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 DropdownMenuSpinner(
-                    dropMenuItems = viewModel.state.storages,
+                    dropMenuItems = state.storages,
                     isDrop = expanded,
                     onDismissRequest = {
                        expanded = false
@@ -192,9 +197,9 @@ fun HomeScreen(
                         spinnerText = it.name
                         expanded = false
                         if (it.id == -1){
-                            viewModel.onEvent(HomeEvent.GetAllVocabularyNotes)
+                            onEvent(HomeEvent.GetAllVocabularyNotes)
                         }else{
-                            viewModel.onEvent(HomeEvent.GetNotesByStorageId(it.storageId))
+                            onEvent(HomeEvent.GetNotesByStorageId(it.storageId))
                         }
                     }
                 )
@@ -213,7 +218,7 @@ fun HomeScreen(
             }
 
             LazyColumn{
-                items(viewModel.state.notes){note ->
+                items(state.notes){note ->
                     VocabularyNoteItem(
                         vocabularyNote = note,
                         onItemClick = {}
@@ -224,8 +229,53 @@ fun HomeScreen(
 
         }
     }
+}
 
-
-
-
+@ExperimentalComposeUiApi
+@Preview
+@Composable
+fun HomeScreenPreView(){
+    VocabularyNoteTheme {
+        HomeScreen(
+            onNavigation = { string -> },
+            state = HomeState(
+                notes = listOf(
+                    VocabularyNote(
+                        type = 1,
+                        word = "word",
+                        hiraganaOrKatakana = "hira",
+                        roma = "roma",
+                        createDate = 23,
+                        explain = "explain",
+                        storageId = 2
+                    ),
+                    VocabularyNote(
+                        type = 1,
+                        word = "word2",
+                        hiraganaOrKatakana = "hira",
+                        roma = "roma",
+                        createDate = 23,
+                        explain = "explain",
+                        storageId = 2
+                    ),
+                    VocabularyNote(
+                        type = 1,
+                        word = "word3",
+                        hiraganaOrKatakana = "hira",
+                        roma = "roma",
+                        createDate = 23,
+                        explain = "explain",
+                        storageId = 2
+                    )
+                ),
+                storages = listOf(),
+                spinnerSelected = "WEWER",
+                isHintVisible = false,
+                searchText = "Box",
+                userName = "Test",
+                userIcon = User.icons[1]
+            ),
+            onEvent = {}
+        )
+    }
 }

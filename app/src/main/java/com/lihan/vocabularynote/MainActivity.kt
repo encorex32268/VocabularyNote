@@ -17,8 +17,10 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.google.gson.Gson
 import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.feature.home.presentations.add.InsertEditScreen
+import com.lihan.vocabularynote.feature.home.presentations.add.InsertEditViewModel
 import com.lihan.vocabularynote.feature.home.presentations.exam.ExamScreen
 import com.lihan.vocabularynote.feature.home.presentations.home.HomeScreen
+import com.lihan.vocabularynote.feature.home.presentations.home.HomeViewModel
 import com.lihan.vocabularynote.feature.tag.domain.model.Tag
 import com.lihan.vocabularynote.feature.info.presentations.InfoScreen
 import com.lihan.vocabularynote.feature.settings.presentations.SettingsScreen
@@ -49,6 +51,8 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = Route.HOME) {
                         composable(route = Route.HOME) {
+                            val viewModel = hiltViewModel<HomeViewModel>()
+                            val state = viewModel.state
                             HomeScreen(
                                 onNavigation = {
                                     when (it) {
@@ -59,7 +63,9 @@ class MainActivity : ComponentActivity() {
                                             navController.navigate(it)
                                         }
                                     }
-                                }
+                                },
+                                state = state,
+                                onEvent = viewModel::onEvent
                             )
                         }
                         composable(
@@ -75,6 +81,8 @@ class MainActivity : ComponentActivity() {
                         ) {
                             val noteId = it.arguments?.getInt("note_id") ?: -1
                             val storageId = it.arguments?.getInt("storageId")?:-1
+                            val viewModel = hiltViewModel<InsertEditViewModel>()
+                            val state = viewModel.state
                             InsertEditScreen(
                                 noteId = noteId,
                                 navController = navController,
@@ -88,7 +96,9 @@ class MainActivity : ComponentActivity() {
                                                 inclusive = true
                                             ).build()
                                     )
-                                }
+                                },
+                                state = state,
+                                onEvent = viewModel::onEvent
                             )
                         }
                         composable(

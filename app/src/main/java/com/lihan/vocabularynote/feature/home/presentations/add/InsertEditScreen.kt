@@ -25,12 +25,15 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.lihan.vocabularynote.core.ui.LocalSpacing
+import com.lihan.vocabularynote.feature.home.domain.model.VocabularyNote
 import com.lihan.vocabularynote.feature.home.presentations.add.components.TagDialog
+import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 
 
 @ExperimentalComposeUiApi
@@ -39,12 +42,12 @@ fun InsertEditScreen(
     modifier: Modifier = Modifier,
     noteId: Int = -1,
     navController: NavController,
-    viewModel : InsertEditViewModel = hiltViewModel(),
     storageId : Int = -1,
     onTagAddClicked : () -> Unit,
     typeCircleSize: Dp = 40.dp,
-
-    ) {
+    state : InsertEditState,
+    onEvent : (InsertEditEvent) -> Unit
+) {
     val spacer = LocalSpacing.current
 
     var isEditPage by remember {
@@ -54,13 +57,12 @@ fun InsertEditScreen(
     val (first, second,third) = FocusRequester.createRefs()
     val focusManager = LocalFocusManager.current
     val dialogWidth = LocalConfiguration.current.screenWidthDp.dp / 2
-    val state = viewModel.state
     LaunchedEffect(key1 = noteId){
         if (noteId != -1){
             isEditPage = true
-            viewModel.onEvent(InsertEditEvent.IsEditPage(noteId))
+            onEvent(InsertEditEvent.IsEditPage(noteId))
         }else{
-            viewModel.onEvent(InsertEditEvent.IsAddPage(storageId))
+            onEvent(InsertEditEvent.IsAddPage(storageId))
         }
         focusRequester.requestFocus()
     }
@@ -71,7 +73,7 @@ fun InsertEditScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(InsertEditEvent.Save)
+                    onEvent(InsertEditEvent.Save)
                     navController.popBackStack()
                 })
             {
@@ -105,7 +107,7 @@ fun InsertEditScreen(
             if (isEditPage){
                 IconButton(
                     modifier = Modifier.align(Alignment.TopEnd),onClick = {
-                        viewModel.onEvent(InsertEditEvent.Remove(noteId))
+                        onEvent(InsertEditEvent.Remove(noteId))
                         navController.popBackStack()
                     }) {
                     Icon(
@@ -184,14 +186,14 @@ fun InsertEditScreen(
                                 .width(dialogWidth)
                             ,
                             isShow = expanded,
-                            tags = viewModel.state.tags,
+                            tags = state.tags,
                             onAddTagClicked = {
                                 expanded = false
                                 onTagAddClicked()
                             },
                             onTagItemClicked = {
                                 expanded = false
-                                viewModel.onEvent(InsertEditEvent.TypeColorChanged(it.color))
+                                onEvent(InsertEditEvent.TypeColorChanged(it.color))
                             }
                         )
 
@@ -215,9 +217,9 @@ fun InsertEditScreen(
                                     down = second
                                 }
                             ,
-                            value = viewModel.state.vocabularyNote?.hiraganaOrKatakana?:"",
+                            value = state.vocabularyNote?.hiraganaOrKatakana?:"",
                             onValueChange = {
-                                viewModel.onEvent(InsertEditEvent.HiraganaChanged(it))
+                                onEvent(InsertEditEvent.HiraganaChanged(it))
                             },
                             label = { Text(text = "Phonetics") },
                             singleLine = true,
@@ -232,9 +234,9 @@ fun InsertEditScreen(
                             modifier = Modifier.focusOrder(second){
                                 down = third
                             },
-                            value = viewModel.state.vocabularyNote?.word?:"",
+                            value = state.vocabularyNote?.word?:"",
                             onValueChange = {
-                                viewModel.onEvent(InsertEditEvent.WordChanged(it))
+                                onEvent(InsertEditEvent.WordChanged(it))
                             },
                             label = { Text(text = "Word") },
                             singleLine = true,
@@ -271,9 +273,9 @@ fun InsertEditScreen(
                             .padding(spacer.spaceMedium)
                             .focusOrder(third)
                         ,
-                        value = viewModel.state.vocabularyNote?.explain?:"",
+                        value = state.vocabularyNote?.explain?:"",
                         onValueChange = {
-                            viewModel.onEvent(InsertEditEvent.ExplainChanged(it))
+                            onEvent(InsertEditEvent.ExplainChanged(it))
                         },
                         label = { Text(text = "Explain") }
                     )
@@ -287,6 +289,35 @@ fun InsertEditScreen(
 
 
 
+    }
+
+
+}
+
+@ExperimentalComposeUiApi
+@Preview
+@Composable
+fun InsertEditScreenPreView(){
+
+    VocabularyNoteTheme {
+        val context = LocalContext.current
+        InsertEditScreen(
+            navController = NavController(context),
+            onTagAddClicked = {},
+            state = InsertEditState(
+                storageId = 1,
+                vocabularyNote = VocabularyNote(
+                    type = 1,
+                    word = "Edit Word",
+                    hiraganaOrKatakana = "Hira",
+                    createDate = 22123,
+                    roma = "Roma",
+                    explain = "Explain",
+                    storageId = 2
+                )
+            ),
+            onEvent = { _->}
+        )
     }
 
 
