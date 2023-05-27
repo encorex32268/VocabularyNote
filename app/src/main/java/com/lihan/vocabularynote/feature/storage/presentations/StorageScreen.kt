@@ -22,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.R
@@ -32,7 +33,10 @@ import com.lihan.vocabularynote.core.presentations.componets.SearchBar
 import com.lihan.vocabularynote.core.util.UiEvent
 import com.lihan.vocabularynote.feature.home.presentations.home.HomeEvent
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
+import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 @ExperimentalComposeUiApi
 @Composable
@@ -40,16 +44,20 @@ fun StorageScreen(
     onCloseButtonClicked : () -> Unit,
     onEditStorageClicked : (Storage) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel : StorageViewModel = hiltViewModel()
+    storageState : StorageState,
+    uiEvent : Flow<UiEvent>,
+    onEvent : (StorageEvent) -> Unit
 ) {
     val spacer = LocalSpacing.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val scrollState = rememberLazyListState()
     LaunchedEffect(key1 = true){
-        viewModel.uiEvent.collect {
+        uiEvent.collect {
             if (it == UiEvent.Success){
-                scrollState.animateScrollToItem(viewModel.storageState.items.size)
+                scrollState.animateScrollToItem(
+                    storageState.items.size
+                )
             }
         }
     }
@@ -60,22 +68,26 @@ fun StorageScreen(
         Column (
             modifier = Modifier.fillMaxSize()
         ){
-            IconButton(
-                modifier = Modifier
-                    .size(64.dp)
-                    .padding(spacer.spaceMedium)
-                    .align(Alignment.End),
-                onClick = {
-                    onCloseButtonClicked()
-                }) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close"
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TitleText(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(id = R.string.storage)
                 )
+                IconButton(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .padding(spacer.spaceMedium),
+                    onClick = {
+                        onCloseButtonClicked()
+                    }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close"
+                    )
+                }
             }
-            TitleText(
-                text = stringResource(id = R.string.storage)
-            )
             Spacer(modifier = Modifier.height(spacer.spaceSmall))
             Row (
                 modifier = Modifier
@@ -91,18 +103,21 @@ fun StorageScreen(
                         .padding(spacer.spaceSmall)
                     ,
                     onValueChange = {
-                        viewModel.onEvent(StorageEvent.SearchStorage(it))
+                        onEvent(StorageEvent.SearchStorage(it))
                     },
                     onSearch = {
                         keyboardController?.hide()
                         focusManager.clearFocus()
-                        viewModel.onEvent(StorageEvent.SearchStorage(viewModel.storageState.searchText))
+                        onEvent(
+                            StorageEvent.SearchStorage(
+                            storageState.searchText)
+                        )
                     },
-                    text = viewModel.storageState.searchText,
+                    text = storageState.searchText,
                     onFocusChanged = {
-                        viewModel.onEvent(StorageEvent.ChangeHintVisible(it.isFocused))
+                        onEvent(StorageEvent.ChangeHintVisible(it.isFocused))
                     },
-                    shouldShowHint = viewModel.storageState.isHintVisible,
+                    shouldShowHint = storageState.isHintVisible,
                     hintText = stringResource(id = R.string.storage_search_storage)
                 )
             }
@@ -118,7 +133,7 @@ fun StorageScreen(
                             .fillMaxWidth()
                             .padding(spacer.spaceSmall)
                             .clickable {
-                                viewModel.onEvent(
+                                onEvent(
                                     StorageEvent.InsertStorage(
                                         title = title,
                                         description = description
@@ -146,7 +161,7 @@ fun StorageScreen(
                         }
                     }
                 }
-                items(viewModel.storageState.items){ storage ->
+                items(storageState.items){ storage ->
                     StorageItem(
                         storage = storage,
                         onClick = {
@@ -164,4 +179,34 @@ fun StorageScreen(
 
     }
 
+}
+
+@ExperimentalComposeUiApi
+@Preview
+@Composable
+fun StorageScreenPreView(){
+    VocabularyNoteTheme {
+        StorageScreen(
+            onCloseButtonClicked = {  },
+            onEditStorageClicked = { storage ->},
+            storageState = StorageState(
+                searchText = "123",
+                items = listOf(
+                    Storage(
+                        name = "123",
+                        description = "New 1",
+                        createAt = 123
+                    ),
+                    Storage(
+                        name = "456",
+                        description = "New 2",
+                        createAt = 456
+                    ),
+                )
+            ),
+            uiEvent = flow {  },
+            onEvent = { event ->}
+        )
+
+    }
 }

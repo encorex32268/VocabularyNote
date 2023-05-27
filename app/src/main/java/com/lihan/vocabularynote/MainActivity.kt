@@ -24,7 +24,9 @@ import com.lihan.vocabularynote.feature.info.presentations.InfoScreen
 import com.lihan.vocabularynote.feature.settings.presentations.SettingsScreen
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 import com.lihan.vocabularynote.feature.storage.presentations.StorageScreen
+import com.lihan.vocabularynote.feature.storage.presentations.StorageViewModel
 import com.lihan.vocabularynote.feature.storage.presentations.edit.StorageEditScreen
+import com.lihan.vocabularynote.feature.storage.presentations.edit.StorageEditViewModel
 import com.lihan.vocabularynote.feature.storage.util.AssetStorageType
 import com.lihan.vocabularynote.feature.tag.presentations.TagScreen
 import com.lihan.vocabularynote.feature.tag.presentations.TagViewModel
@@ -97,6 +99,9 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = Route.STORAGE
                         ) {
+                            val viewModel = hiltViewModel<StorageViewModel>()
+                            val state = viewModel.storageState
+                            val uiEvent = viewModel.uiEvent
                             StorageScreen(
                                 onCloseButtonClicked = {
                                     navController.navigate(
@@ -112,7 +117,10 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(
                                         route = Route.STORAGE_EDIT + "/${Uri.encode(Gson().toJson(it))}"
                                     )
-                                }
+                                },
+                                storageState = state,
+                                uiEvent = uiEvent,
+                                onEvent = viewModel::onEvent
                             )
                         }
                         composable(
@@ -124,8 +132,14 @@ class MainActivity : ComponentActivity() {
                             )
                         ){
                             val storage = it.arguments?.getParcelable("storage")?:Storage()
+                            val viewModel = hiltViewModel<StorageEditViewModel>()
+                            val state = viewModel.state
+                            val uiEvent = viewModel.uiEvent
                             StorageEditScreen(
                                 storage = storage,
+                                state = state,
+                                uiEvent = uiEvent,
+                                onEvent = viewModel::onEvent,
                                 onCloseButtonClicked = {
                                     navController.navigateUp()
                                 },

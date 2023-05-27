@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.R
@@ -32,7 +33,10 @@ import com.lihan.vocabularynote.feature.home.presentations.home.components.Multi
 import com.lihan.vocabularynote.feature.home.presentations.home.components.MultipleFloatingActionButton
 import com.lihan.vocabularynote.feature.home.presentations.home.components.VocabularyNoteItem
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
+import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -41,7 +45,9 @@ fun StorageEditScreen(
     modifier: Modifier = Modifier,
     onCloseButtonClicked : () -> Unit ,
     storage : Storage,
-    viewModel: StorageEditViewModel = hiltViewModel(),
+    state : StorageEditState,
+    uiEvent : Flow<UiEvent>,
+    onEvent : (StorageEditEvent) -> Unit,
     onNewVocabularyNoteClicked : (Int) -> Unit,
     onEditVocabularyNoteClicked : (Int,Int) -> Unit
 ) {
@@ -51,12 +57,10 @@ fun StorageEditScreen(
         mutableStateOf(false)
     }
     LaunchedEffect(key1 = storage.storageId){
-        viewModel.apply {
             onEvent(StorageEditEvent.GetStorage(storageId = storage.storageId))
-        }
     }
     LaunchedEffect(key1 = true){
-        viewModel.uiEvent.collectLatest {
+        uiEvent.collectLatest {
             if (it is UiEvent.Success){
                 onCloseButtonClicked()
             }
@@ -68,7 +72,7 @@ fun StorageEditScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.onEvent(StorageEditEvent.UpdateStorage)
+                    onEvent(StorageEditEvent.UpdateStorage)
                     onNewVocabularyNoteClicked(storage.storageId)
                 }) {
                 Icon(
@@ -119,7 +123,7 @@ fun StorageEditScreen(
                     confirmButton = {
                         TextButton(onClick = {
                             isShowDialog = false
-                            viewModel.onEvent(StorageEditEvent.DeleteStorage(storage.storageId))
+                            onEvent(StorageEditEvent.DeleteStorage(storage.storageId))
                         }) {
                             Text(text = stringResource(id = R.string.storage_edit_delete_dialog_OK_button))
                         }
@@ -149,7 +153,7 @@ fun StorageEditScreen(
                     TextField(
                         modifier = Modifier.onFocusChanged {
                                   if(!it.hasFocus){
-                                      viewModel.onEvent(StorageEditEvent.UpdateStorage)
+                                      onEvent(StorageEditEvent.UpdateStorage)
                                   }
                         },
                         colors = TextFieldDefaults.textFieldColors(
@@ -158,13 +162,13 @@ fun StorageEditScreen(
                         maxLines = 1,
                         singleLine = true,
                         textStyle = MaterialTheme.typography.h4,
-                        value = viewModel.state.storage.name,
+                        value = state.storage.name,
                         onValueChange = {
-                            viewModel.onEvent(StorageEditEvent.ChangeStorageName(it))
+                            onEvent(StorageEditEvent.ChangeStorageName(it))
                         },
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                viewModel.onEvent(StorageEditEvent.UpdateStorage)
+                                onEvent(StorageEditEvent.UpdateStorage)
                                 focusManager.clearFocus()
                             }
                         ),
@@ -179,7 +183,7 @@ fun StorageEditScreen(
                     TextField(
                         modifier = Modifier.onFocusChanged {
                             if(!it.hasFocus){
-                                viewModel.onEvent(StorageEditEvent.UpdateStorage)
+                                onEvent(StorageEditEvent.UpdateStorage)
                             }
                         },
                         colors = TextFieldDefaults.textFieldColors(
@@ -188,13 +192,13 @@ fun StorageEditScreen(
                         maxLines = 1,
                         singleLine = true,
                         textStyle = MaterialTheme.typography.body1,
-                        value = viewModel.state.storage.description,
+                        value = state.storage.description,
                         onValueChange = {
-                            viewModel.onEvent(StorageEditEvent.ChangeStorageDescription(it))
+                            onEvent(StorageEditEvent.ChangeStorageDescription(it))
                         },
                         keyboardActions = KeyboardActions(
                             onDone = {
-                                viewModel.onEvent(StorageEditEvent.UpdateStorage)
+                                onEvent(StorageEditEvent.UpdateStorage)
                                 focusManager.clearFocus()
                             }
                         ),
@@ -212,11 +216,11 @@ fun StorageEditScreen(
                         text = stringResource(id = R.string.storage_edit_createAt , getRealTime(storage.createAt)),
                         style = MaterialTheme.typography.body1
                     )
-                    Text(text = stringResource(id = R.string.storage_edit_count , viewModel.state.items.size))
+                    Text(text = stringResource(id = R.string.storage_edit_count , state.items.size))
                 }
             }
             LazyColumn{
-                items(viewModel.state.items){ note->
+                items(state.items){ note->
                     VocabularyNoteItem(
                         vocabularyNote = note,
                         onEditClick = {
@@ -243,4 +247,27 @@ fun StorageEditScreen(
 fun getRealTime(createAt: Long): String {
     val simpleFormatter = android.text.format.DateFormat.format("yyyy-MM-dd HH:mm:ss",createAt)
     return simpleFormatter.toString()
+}
+
+
+@Preview
+@Composable
+fun StorageEditScreenPreView(){
+    VocabularyNoteTheme {
+        val storage = Storage(
+            name = "1234",
+            description = "12314"
+        )
+        StorageEditScreen(
+            onCloseButtonClicked = { },
+            storage = storage,
+            state = StorageEditState(
+                storage = storage
+            ),
+            uiEvent = flow {  },
+            onEvent = {event ->},
+            onNewVocabularyNoteClicked = { temp ->},
+            onEditVocabularyNoteClicked = {temp , temp1 ->}
+        )
+    }
 }
