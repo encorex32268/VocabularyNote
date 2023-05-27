@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavOptions
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -26,7 +27,9 @@ import com.lihan.vocabularynote.feature.storage.presentations.StorageScreen
 import com.lihan.vocabularynote.feature.storage.presentations.edit.StorageEditScreen
 import com.lihan.vocabularynote.feature.storage.util.AssetStorageType
 import com.lihan.vocabularynote.feature.tag.presentations.TagScreen
+import com.lihan.vocabularynote.feature.tag.presentations.TagViewModel
 import com.lihan.vocabularynote.feature.tag.presentations.add.TagAddScreen
+import com.lihan.vocabularynote.feature.tag.presentations.add.TagAddViewModel
 import com.lihan.vocabularynote.feature.tag.util.AssetTagType
 import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -138,7 +141,10 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = Route.TAG
                         ) {
+                            val viewModel = hiltViewModel<TagViewModel>()
+                            val state = viewModel.tagState
                             TagScreen(
+                                state,
                                 onCloseButtonClicked = {
                                     navController.navigate(
                                         route = Route.HOME,
@@ -174,11 +180,15 @@ class MainActivity : ComponentActivity() {
                             )
                         ) {
                             val tag = it.arguments?.getParcelable<Tag>("tag")?: Tag()
+                            val viewModel = hiltViewModel<TagAddViewModel>()
+                            val state = viewModel.tagAddState
                             TagAddScreen(
+                                onEvent = viewModel::onEvent,
                                 onCloseButtonClicked = {
                                     navController.navigateUp()
                                 },
-                                tag = tag
+                                tag = tag,
+                                tagAddState = state
                             )
                         }
 

@@ -23,7 +23,7 @@ class TagAddViewModel @Inject constructor(
 ) : ViewModel(){
 
     var tagAddState  by mutableStateOf(
-        Tag(name = "", color = Color.Blue.toArgb(), createAt = 0)
+        TagAddState()
     )
     fun onEvent(event: TagAddEvent){
         when(event){
@@ -56,7 +56,14 @@ class TagAddViewModel @Inject constructor(
                     )
                 }
                 viewModelScope.launch {
-                    tagUseCases.insertTag(tagAddState)
+                    tagUseCases.insertTag(
+                        Tag(
+                            id = if (tagAddState.id != null) tagAddState.id else null,
+                            name = tagAddState.name,
+                            color = tagAddState.color,
+                            createAt = tagAddState.createAt
+                        )
+                    )
                 }
             }
         }

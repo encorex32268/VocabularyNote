@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.lihan.vocabularynote.feature.tag.presentations.add
 
 import android.util.Log
@@ -49,6 +51,7 @@ import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.feature.tag.domain.model.Tag
 import com.lihan.vocabularynote.feature.tag.presentations.TagEvent
 import com.lihan.vocabularynote.feature.tag.presentations.TagViewModel
+import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -58,22 +61,23 @@ import kotlinx.coroutines.launch
 fun TagAddScreen(
     modifier: Modifier = Modifier,
     onCloseButtonClicked : () -> Unit,
-    viewModel : TagAddViewModel = hiltViewModel(),
-    tag: Tag
+    onEvent : (TagAddEvent) -> Unit,
+    tag: Tag,
+    tagAddState : TagAddState ,
 ) {
     val spacer = LocalSpacing.current
     var dialogShow by remember {
         mutableStateOf(false)
     }
     LaunchedEffect(key1 = true){
-        viewModel.onEvent(TagAddEvent.InitTag(tag))
+        onEvent(TagAddEvent.InitTag(tag))
     }
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                viewModel.onEvent(TagAddEvent.InertTag)
+                onEvent(TagAddEvent.InertTag)
                 onCloseButtonClicked()
             }) {
                 Icon(imageVector = Icons.Default.Done  , contentDescription ="TagAddDone")
@@ -83,23 +87,26 @@ fun TagAddScreen(
         Column (
             modifier = Modifier.fillMaxSize(),
         ) {
-            IconButton(
-                modifier = Modifier
-                    .size(64.dp)
-                    .padding(spacer.spaceSmall)
-                    .align(Alignment.End),
-                onClick = {
-                     onCloseButtonClicked()
-                }) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close"
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TitleText(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(id = R.string.tag_add)
                 )
+                IconButton(
+                    modifier = Modifier
+                        .size(64.dp)
+                        .padding(spacer.spaceSmall),
+                    onClick = {
+                        onCloseButtonClicked()
+                    }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close"
+                    )
+                }
             }
-            TitleText(
-                text = stringResource(id = R.string.tag_add)
-            )
-            Spacer(modifier = Modifier.height(spacer.spaceExtraLarge))
             Spacer(modifier = Modifier.height(spacer.spaceExtraLarge))
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -112,7 +119,7 @@ fun TagAddScreen(
                     modifier = Modifier
                         .size(150.dp)
                         .clip(shape = RoundedCornerShape(size = 12.dp))
-                        .background(Color(viewModel.tagAddState.color))
+                        .background(Color(tagAddState.color))
                         .clickable {
                             dialogShow = true
                         },
@@ -122,11 +129,11 @@ fun TagAddScreen(
                     DialogColorPicker(
                         modifier = Modifier.fillMaxWidth(),
                         onColorSend = {
-                            viewModel.onEvent(TagAddEvent.ColorPicked(it.color.toArgb()))
+                            onEvent(TagAddEvent.ColorPicked(it.color.toArgb()))
                             dialogShow = false
                         },
                         isShowDialog = dialogShow,
-                        defaultColor = viewModel.tagAddState.color
+                        defaultColor = tagAddState.color
                     )
                 }
             }
@@ -139,9 +146,9 @@ fun TagAddScreen(
             val focusManager = LocalFocusManager.current
             BasicTextField(
                 textStyle = TextStyle(textAlign = TextAlign.Center),
-                value = viewModel.tagAddState.name,
+                value = tagAddState.name,
                 onValueChange = {
-                    viewModel.onEvent(TagAddEvent.InputTagName(it))
+                    onEvent(TagAddEvent.InputTagName(it))
                 },
                 singleLine = true,
                 keyboardActions = KeyboardActions(
@@ -169,7 +176,7 @@ fun TagAddScreen(
                     .wrapContentWidth(Alignment.CenterHorizontally)
                     .border(
                         width = 1.dp,
-                        color = Color(viewModel.tagAddState.color),
+                        color = Color(tagAddState.color),
                         shape = RoundedCornerShape(5.dp)
                     )
                     .padding(spacer.spaceMedium)
@@ -195,4 +202,26 @@ fun TagAddScreen(
 
     }
 
+}
+
+@ExperimentalComposeUiApi
+@Preview
+@Composable
+fun TagAddScreen(){
+    VocabularyNoteTheme {
+        val tag = Tag(
+            name = "qwe",
+            color = Color.Magenta.toArgb(),
+            createAt = 123
+        )
+        TagAddScreen(
+            tag = tag,
+            tagAddState = TagAddState(
+                name = tag.name,
+                color = tag.color
+            ),
+            onCloseButtonClicked = {},
+            onEvent = { event ->}
+        )
+    }
 }
