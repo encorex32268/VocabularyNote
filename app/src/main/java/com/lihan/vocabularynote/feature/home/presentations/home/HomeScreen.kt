@@ -1,5 +1,6 @@
 package com.lihan.vocabularynote.feature.home.presentations.home
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.domain.model.User
 import com.lihan.vocabularynote.feature.home.presentations.home.components.DropdownMenuSpinner
@@ -40,7 +40,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigation : (String) -> Unit,
     state : HomeState ,
-    onEvent : (HomeEvent) -> Unit
+    onEvent : (HomeEvent) -> Unit,
+    onNewNoteButtonClicked : (Int) -> Unit
 ) {
     val spacer = LocalSpacing.current
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -94,6 +95,22 @@ fun HomeScreen(
 
         },
         drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
+        floatingActionButton = {
+            if (state.showingStorage != null){
+                FloatingActionButton(
+                    onClick = {
+                            onNewNoteButtonClicked(
+                                state.showingStorage.storageId
+                            )
+                    })
+                {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Button"
+                    )
+                }
+            }
+        }
 //        floatingActionButton = {
 //            MultipleFloatingActionButton(
 //                multipleActionItems = listOf(
@@ -173,10 +190,6 @@ fun HomeScreen(
 
             }
             Spacer(modifier = Modifier.height(spacer.spaceExtraSmall))
-            val allString = stringResource(id = R.string.home_all_storage)
-            var spinnerText  by remember {
-                mutableStateOf(allString)
-            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -194,18 +207,19 @@ fun HomeScreen(
                        expanded = false
                     },
                     onDropItemSelected = {
-                        spinnerText = it.name
                         expanded = false
                         if (it.id == -1){
+                            onEvent(HomeEvent.SpinnerStorageChanged(null))
                             onEvent(HomeEvent.GetAllVocabularyNotes)
                         }else{
+                            onEvent(HomeEvent.SpinnerStorageChanged(it))
                             onEvent(HomeEvent.GetNotesByStorageId(it.storageId))
                         }
                     }
                 )
                 TitleText(
                     modifier = Modifier.weight(1f),
-                    text = spinnerText
+                    text = if (state.showingStorage == null) stringResource(id = R.string.home_all_storage) else state.showingStorage.name
                 )
                 Spacer(modifier = Modifier.width(spacer.spaceExtraSmall))
                 Icon(
@@ -275,7 +289,8 @@ fun HomeScreenPreView(){
                 userName = "Test",
                 userIcon = User.icons[1]
             ),
-            onEvent = {}
+            onEvent = {},
+            onNewNoteButtonClicked = {_->}
         )
     }
 }

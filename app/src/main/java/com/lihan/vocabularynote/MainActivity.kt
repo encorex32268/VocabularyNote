@@ -2,6 +2,7 @@ package com.lihan.vocabularynote
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -65,7 +66,11 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 state = state,
-                                onEvent = viewModel::onEvent
+                                onEvent = viewModel::onEvent,
+                                onNewNoteButtonClicked = {
+                                    Log.d("TAG", "onCreate: >>> ${it}")
+                                    navController.navigate(Route.ADD_EDIT + "/-1/$it")
+                                }
                             )
                         }
                         composable(

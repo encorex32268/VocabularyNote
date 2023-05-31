@@ -114,6 +114,11 @@ class HomeViewModel @Inject constructor(
                 )
                 preferences.saveUserIcon(newUserIcon)
             }
+            is HomeEvent.SpinnerStorageChanged->{
+                state = state.copy(
+                    showingStorage = event.storage
+                )
+            }
 
         }
 
