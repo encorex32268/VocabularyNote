@@ -75,18 +75,6 @@ fun StorageScreen(
                     modifier = Modifier.weight(1f),
                     text = stringResource(id = R.string.storage)
                 )
-                IconButton(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .padding(spacer.spaceMedium),
-                    onClick = {
-                        onCloseButtonClicked()
-                    }) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close"
-                    )
-                }
             }
             Spacer(modifier = Modifier.height(spacer.spaceSmall))
             Row (

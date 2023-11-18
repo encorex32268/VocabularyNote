@@ -46,101 +46,10 @@ fun HomeScreen(
     val spacer = LocalSpacing.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    val scaffoldState = rememberScaffoldState()
-    val scope = rememberCoroutineScope()
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-    Scaffold(
-        scaffoldState = scaffoldState,
-        modifier = modifier.fillMaxSize(),
-        drawerContent = {
-             DrawerHeader(
-                 userName = state.userName,
-                 userIcon = state.userIcon,
-                 onSaveName = {
-                 onEvent(HomeEvent.SaveUserName(it))
-                 },
-                 onSelectedImage = {
-                     onEvent(HomeEvent.SaveUserIcon(it))
-                 }
-             )
-             DrawerBody(items = listOf(
-                 DrawerItem(
-                     imageVector = Icons.Default.Home,
-                     name = stringResource(id = R.string.home),
-                     routeName = Route.HOME
-                 ),
-                 DrawerItem(
-                     imageVector = Icons.Default.FolderOpen,
-                     name = stringResource(id = R.string.storage),
-                     routeName = Route.STORAGE
-                 ),
-                 DrawerItem(
-                     imageVector = Icons.Default.Tag,
-                     name = stringResource(id = R.string.tag),
-                     routeName = Route.TAG
-                 ),
-             ), onItemClick = {
-                 if(it.routeName == Route.HOME){
-                     scope.launch {
-                         scaffoldState.drawerState.close()
-                         expanded = false
-                     }
-                 }else{
-                     onNavigation(it.routeName)
-                 }
-             })
 
-
-        },
-        drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
-        floatingActionButton = {
-            if (state.showingStorage != null){
-                FloatingActionButton(
-                    onClick = {
-                            onNewNoteButtonClicked(
-                                state.showingStorage.storageId
-                            )
-                    })
-                {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Button"
-                    )
-                }
-            }
-        }
-//        floatingActionButton = {
-//            MultipleFloatingActionButton(
-//                multipleActionItems = listOf(
-//                    MultipleActionItem(
-//                        name = Route.ADD_EDIT,
-//                        icon = Icons.Default.Add
-//                    ),
-//                    MultipleActionItem(
-//                        name = Route.EXAM,
-//                        icon = Icons.Default.List
-//                    )
-//
-//                ),
-//                onFloatingButtonClick = {
-//                    when(it.name){
-//                        Route.EXAM->{
-//                            onNavigation(Route.EXAM)
-//                        }
-//                        Route.ADD_EDIT->{
-//                            focusManager.clearFocus()
-//                            onNavigation(Route.ADD_EDIT)
-//                        }
-//                    }
-//                }
-//            )
-//        }
-    ) {
-        Column (
+    Column (
             modifier = modifier.fillMaxSize()
-        ){
+    ){
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -150,28 +59,8 @@ fun HomeScreen(
                         top = spacer.spaceMedium
                     ),
             ) {
-                IconButton(
-                    modifier = Modifier.weight(1f),
-                    onClick = {
-                        scope.launch {
-                            scaffoldState.drawerState.open()
-                        }
-                    }
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .padding(top = spacer.spaceMedium),
-                        painter = painterResource(id = R.drawable.icon_menu),
-                        contentDescription = "Drawer Menu"
-                    )
-                }
-                Spacer(modifier = Modifier.width(spacer.spaceExtraSmall))
                 SearchBar(
-                    modifier = Modifier
-                        .weight(9f)
-                        .padding(spacer.spaceSmall)
-                    ,
+                    modifier = Modifier.fillMaxWidth() ,
                     onValueChange = {
                         onEvent(HomeEvent.SearchByString(it))
                     },
@@ -190,49 +79,13 @@ fun HomeScreen(
 
             }
             Spacer(modifier = Modifier.height(spacer.spaceExtraSmall))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(spacer.spaceMedium)
-                    .clickable {
-                        expanded = !expanded
-                    }
-                ,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DropdownMenuSpinner(
-                    dropMenuItems = state.storages,
-                    isDrop = expanded,
-                    onDismissRequest = {
-                       expanded = false
-                    },
-                    onDropItemSelected = {
-                        expanded = false
-                        if (it.id == -1){
-                            onEvent(HomeEvent.SpinnerStorageChanged(null))
-                            onEvent(HomeEvent.GetAllVocabularyNotes)
-                        }else{
-                            onEvent(HomeEvent.SpinnerStorageChanged(it))
-                            onEvent(HomeEvent.GetNotesByStorageId(it.storageId))
-                        }
-                    }
-                )
-                TitleText(
-                    modifier = Modifier.weight(1f),
-                    text = if (state.showingStorage == null) stringResource(id = R.string.home_all_storage) else state.showingStorage.name
-                )
-                Spacer(modifier = Modifier.width(spacer.spaceExtraSmall))
-                Icon(
-                    modifier = Modifier.size(36.dp),
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "ArrowDropDown",
-                    tint = Color.Black
-                )
-
-            }
-
             LazyColumn{
-                items(state.notes){note ->
+                items(
+                    items = state.notes,
+                    key = {
+                        it.id?:0
+                    }
+                ){note ->
                     VocabularyNoteItem(
                         vocabularyNote = note,
                         onItemClick = {}
@@ -242,7 +95,6 @@ fun HomeScreen(
             }
 
         }
-    }
 }
 
 @ExperimentalComposeUiApi

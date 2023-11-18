@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
@@ -153,99 +154,124 @@ fun InsertEditScreen(
                         )
                 ) {
 
-                    Canvas(modifier = Modifier
-                        .padding(spacer.spaceMedium)
-                        .size(typeCircleSize)
-                        .align(Alignment.TopStart)
-                        .pointerInput(true) {
-                            detectTapGestures {
-                                expanded = !expanded
-                            }
-                        }
-                    ){
+//                    Canvas(modifier = Modifier
+//                        .padding(spacer.spaceMedium)
+//                        .size(typeCircleSize)
+//                        .align(Alignment.TopStart)
+//                        .pointerInput(true) {
+//                            detectTapGestures {
+//                                expanded = !expanded
+//                            }
+//                        }
+//                    ){
+//                        var type = 0
+//                        state.vocabularyNote?.let {
+//                            type = it.type
+//                        }
+//                        drawCircle(
+//                            color = if (type == 0) Color.Black else Color(type),
+//                            radius = typeCircleSize.toPx() / 2,
+//                            style = if (type == 0){
+//                                Stroke(
+//                                    width = 1f
+//                                )
+//                            }else{
+//                                Fill
+//                            }
+//                        )
+//                    }
+                    Row {
                         var type = 0
                         state.vocabularyNote?.let {
                             type = it.type
                         }
-                        drawCircle(
-                            color = if (type == 0) Color.Black else Color(type),
-                            radius = typeCircleSize.toPx() / 2,
-                            style = if (type == 0){
-                                Stroke(
-                                    width = 1f
+                        Box(
+                            modifier = Modifier
+                                .padding(spacer.spaceMedium)
+                                .size(25.dp)
+                                .pointerInput(true) {
+                                    detectTapGestures {
+                                        expanded = !expanded
+                                    }
+                                }
+                                .clip(
+                                    RoundedCornerShape(8.dp)
                                 )
-                            }else{
-                                Fill
-                            }
-                        )
-                    }
-                    if (expanded){
-                        TagDialog(
-                            modifier = Modifier
-                                .background(Color.White)
-                                .width(dialogWidth)
-                            ,
-                            isShow = expanded,
-                            tags = state.tags,
-                            onAddTagClicked = {
-                                expanded = false
-                                onTagAddClicked()
-                            },
-                            onTagItemClicked = {
-                                expanded = false
-                                onEvent(InsertEditEvent.TypeColorChanged(it.color))
-                            }
+                                .background(
+                                    color = if (type == 0) Color.Black else Color(type)
+                                )
                         )
 
+
+                        if (expanded){
+                            TagDialog(
+                                modifier = Modifier
+                                    .background(Color.White)
+                                    .width(dialogWidth)
+                                ,
+                                isShow = expanded,
+                                tags = state.tags,
+                                onAddTagClicked = {
+                                    expanded = false
+                                    onTagAddClicked()
+                                },
+                                onTagItemClicked = {
+                                    expanded = false
+                                    onEvent(InsertEditEvent.TypeColorChanged(it.color))
+                                }
+                            )
+
+                        }
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = spacer.spaceExtraLarge,
+                                    top = spacer.spaceMedium,
+                                    end = spacer.spaceMedium,
+                                ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            OutlinedTextField(
+                                modifier = Modifier
+                                    .focusRequester(focusRequester)
+                                    .focusOrder(first) {
+                                        down = second
+                                    }
+                                ,
+                                value = state.vocabularyNote?.hiraganaOrKatakana?:"",
+                                onValueChange = {
+                                    onEvent(InsertEditEvent.HiraganaChanged(it))
+                                },
+                                label = { Text(text = "Phonetics") },
+                                singleLine = true,
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        focusManager.moveFocus(FocusDirection.Down)
+                                    }
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            OutlinedTextField(
+                                modifier = Modifier.focusOrder(second){
+                                    down = third
+                                },
+                                value = state.vocabularyNote?.word?:"",
+                                onValueChange = {
+                                    onEvent(InsertEditEvent.WordChanged(it))
+                                },
+                                label = { Text(text = "Word") },
+                                singleLine = true,
+                                keyboardActions = KeyboardActions(
+                                    onDone = {
+                                        focusManager.moveFocus(FocusDirection.Down)
+                                    }
+                                )
+                            )
                     }
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = spacer.spaceExtraLarge,
-                                top = spacer.spaceMedium,
-                                end = spacer.spaceMedium,
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .focusRequester(focusRequester)
-                                .focusOrder(first) {
-                                    down = second
-                                }
-                            ,
-                            value = state.vocabularyNote?.hiraganaOrKatakana?:"",
-                            onValueChange = {
-                                onEvent(InsertEditEvent.HiraganaChanged(it))
-                            },
-                            label = { Text(text = "Phonetics") },
-                            singleLine = true,
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    focusManager.moveFocus(FocusDirection.Down)
-                                }
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        OutlinedTextField(
-                            modifier = Modifier.focusOrder(second){
-                                down = third
-                            },
-                            value = state.vocabularyNote?.word?:"",
-                            onValueChange = {
-                                onEvent(InsertEditEvent.WordChanged(it))
-                            },
-                            label = { Text(text = "Word") },
-                            singleLine = true,
-                            keyboardActions = KeyboardActions(
-                                onDone = {
-                                    focusManager.moveFocus(FocusDirection.Down)
-                                }
-                            )
-                        )
 
                     }
 

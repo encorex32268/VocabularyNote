@@ -17,7 +17,7 @@ fun TitleText(
     text : String,
     fontWeight: FontWeight = FontWeight.ExtraBold,
     fontStyle: FontStyle = FontStyle.Normal,
-    fontSize : TextUnit = 64.sp
+    fontSize : TextUnit = 32.sp
 ) {
     var reSizeFontSize by remember{
         mutableStateOf(fontSize)
@@ -28,7 +28,10 @@ fun TitleText(
     }
     Text(
         modifier = modifier
-            .padding(start = LocalSpacing.current.spaceMedium)
+            .padding(
+                top = LocalSpacing.current.spaceSmall,
+                start = LocalSpacing.current.spaceMedium
+            )
             .drawWithContent {
                     if (shouldDraw){
                         drawContent()
