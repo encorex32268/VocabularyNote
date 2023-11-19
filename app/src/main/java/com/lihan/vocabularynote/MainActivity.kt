@@ -1,12 +1,12 @@
 package com.lihan.vocabularynote
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
@@ -23,7 +23,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.gson.Gson
 import com.lihan.vocabularynote.core.navigation.Route
 import com.lihan.vocabularynote.core.presentations.componets.bottomnavigation.BottomItem
 import com.lihan.vocabularynote.core.presentations.componets.bottomnavigation.BottomNavigation
@@ -32,11 +31,8 @@ import com.lihan.vocabularynote.feature.home.presentations.add.InsertEditViewMod
 import com.lihan.vocabularynote.feature.home.presentations.exam.ExamScreen
 import com.lihan.vocabularynote.feature.home.presentations.home.HomeScreen
 import com.lihan.vocabularynote.feature.home.presentations.home.HomeViewModel
-import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 import com.lihan.vocabularynote.feature.storage.presentations.StorageScreen
 import com.lihan.vocabularynote.feature.storage.presentations.StorageViewModel
-import com.lihan.vocabularynote.feature.storage.presentations.edit.StorageEditScreen
-import com.lihan.vocabularynote.feature.storage.presentations.edit.StorageEditViewModel
 import com.lihan.vocabularynote.feature.storage.util.AssetStorageType
 import com.lihan.vocabularynote.feature.tag.presentations.TagScreen
 import com.lihan.vocabularynote.feature.tag.presentations.TagViewModel
@@ -44,6 +40,7 @@ import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
+@ExperimentalMaterialApi
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
 @AndroidEntryPoint
@@ -92,22 +89,8 @@ class MainActivity : ComponentActivity() {
                                 val viewModel = hiltViewModel<HomeViewModel>()
                                 val state = viewModel.state
                                 HomeScreen(
-                                    onNavigation = {
-                                        when (it) {
-                                            Route.ADD_EDIT -> {
-                                                navController.navigate(Route.ADD_EDIT + "/-1")
-                                            }
-
-                                            else -> {
-                                                navController.navigate(it)
-                                            }
-                                        }
-                                    },
                                     state = state,
-                                    onEvent = viewModel::onEvent,
-                                    onNewNoteButtonClicked = {
-                                        navController.navigate(Route.ADD_EDIT + "/-1/$it")
-                                    }
+                                    onEvent = viewModel::onEvent
                                 )
                             }
                             composable(
@@ -167,25 +150,25 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             ) {
-                                val storage = it.arguments?.getParcelable("storage") ?: Storage()
-                                val viewModel = hiltViewModel<StorageEditViewModel>()
-                                val state = viewModel.state
-                                val uiEvent = viewModel.uiEvent
-                                StorageEditScreen(
-                                    storage = storage,
-                                    state = state,
-                                    uiEvent = uiEvent,
-                                    onEvent = viewModel::onEvent,
-                                    onCloseButtonClicked = {
-                                        navController.navigateUp()
-                                    },
-                                    onNewVocabularyNoteClicked = {
-                                        navController.navigate(Route.ADD_EDIT + "/-1/$it")
-                                    },
-                                    onEditVocabularyNoteClicked = { noteid, storageId ->
-                                        navController.navigate(Route.ADD_EDIT + "/$noteid/$storageId")
-                                    }
-                                )
+//                                val storage = it.arguments?.getParcelable("storage") ?: Storage()
+//                                val viewModel = hiltViewModel<StorageEditViewModel>()
+//                                val state = viewModel.state
+//                                val uiEvent = viewModel.uiEvent
+//                                StorageEditScreen(
+//                                    storage = storage,
+//                                    state = state,
+//                                    uiEvent = uiEvent,
+//                                    onEvent = viewModel::onEvent,
+//                                    onCloseButtonClicked = {
+//                                        navController.navigateUp()
+//                                    },
+//                                    onNewVocabularyNoteClicked = {
+//                                        navController.navigate(Route.ADD_EDIT + "/-1/$it")
+//                                    },
+//                                    onEditVocabularyNoteClicked = { noteid, storageId ->
+//                                        navController.navigate(Route.ADD_EDIT + "/$noteid/$storageId")
+//                                    }
+//                                )
                             }
 
                             composable(

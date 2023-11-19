@@ -12,6 +12,7 @@ import com.lihan.vocabularynote.core.domain.model.User
 import com.lihan.vocabularynote.core.domain.repository.Preferences
 import com.lihan.vocabularynote.feature.home.domain.use_cases.VocabularyNoteUseCases
 import com.lihan.vocabularynote.feature.storage.domain.use_cases.StorageUseCases
+import com.lihan.vocabularynote.feature.tag.domain.use_cases.TagUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val vocabularyNoteUseCases: VocabularyNoteUseCases,
     private val storageUseCases: StorageUseCases,
+    private val tagUseCases : TagUseCases
 ) : ViewModel() {
 
     var state by mutableStateOf(HomeState())
@@ -33,6 +35,7 @@ class HomeViewModel @Inject constructor(
     init {
         onEvent(HomeEvent.GetAllStorage)
         onEvent(HomeEvent.GetAllVocabularyNotes)
+        onEvent(HomeEvent.GetAllTags)
         if (state.storages.isNotEmpty()){
             onEvent(HomeEvent.GetNotesByStorageId(storageId = state.storages[0].storageId))
         }
@@ -47,6 +50,20 @@ class HomeViewModel @Inject constructor(
                             storages = it
                         )
                     }
+                }
+            }
+            is HomeEvent.GetAllTags->{
+                viewModelScope.launch {
+                    tagUseCases.getAllTag.invoke().collectLatest {
+                        state = state.copy(
+                            tags = it
+                        )
+                    }
+                }
+            }
+            is HomeEvent.InsertVocabulary->{
+                viewModelScope.launch {
+                    vocabularyNoteUseCases.insertEditVocabularyNote.invoke(event.vocabularyNote)
                 }
             }
 //            is HomeEvent.GetNotesByStorageId -> {

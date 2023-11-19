@@ -153,33 +153,6 @@ fun InsertEditScreen(
                             shape = RoundedCornerShape(10.dp)
                         )
                 ) {
-
-//                    Canvas(modifier = Modifier
-//                        .padding(spacer.spaceMedium)
-//                        .size(typeCircleSize)
-//                        .align(Alignment.TopStart)
-//                        .pointerInput(true) {
-//                            detectTapGestures {
-//                                expanded = !expanded
-//                            }
-//                        }
-//                    ){
-//                        var type = 0
-//                        state.vocabularyNote?.let {
-//                            type = it.type
-//                        }
-//                        drawCircle(
-//                            color = if (type == 0) Color.Black else Color(type),
-//                            radius = typeCircleSize.toPx() / 2,
-//                            style = if (type == 0){
-//                                Stroke(
-//                                    width = 1f
-//                                )
-//                            }else{
-//                                Fill
-//                            }
-//                        )
-//                    }
                     Row {
                         var type = 0
                         state.vocabularyNote?.let {
@@ -209,12 +182,7 @@ fun InsertEditScreen(
                                     .background(Color.White)
                                     .width(dialogWidth)
                                 ,
-                                isShow = expanded,
                                 tags = state.tags,
-                                onAddTagClicked = {
-                                    expanded = false
-                                    onTagAddClicked()
-                                },
                                 onTagItemClicked = {
                                     expanded = false
                                     onEvent(InsertEditEvent.TypeColorChanged(it.color))

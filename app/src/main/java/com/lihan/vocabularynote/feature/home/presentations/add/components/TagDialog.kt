@@ -28,70 +28,54 @@ fun TagDialog(
     modifier: Modifier = Modifier,
     tags : List<Tag> = emptyList(),
     onTagItemClicked : (Tag) -> Unit,
-    onAddTagClicked : () -> Unit,
-    isShow : Boolean = false,
+    onDismiss : () -> Unit = {}
 ) {
     val spacer = LocalSpacing.current
-    var isShowDialog by remember{
-        mutableStateOf(isShow)
-    }
-    if(isShowDialog){
-        Dialog(
-            onDismissRequest = {
-                isShowDialog = false
-            }
-        ) {
-            Box(
-                modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                contentAlignment = Alignment.Center
+    Dialog(
+        onDismissRequest = {
+            onDismiss()
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    color = Color.White,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clip(RoundedCornerShape(8.dp)),
+            contentAlignment = Alignment.Center
+        ){
+            LazyColumn(
+                modifier = modifier
             ){
-                LazyColumn(
-                    modifier = modifier
-                ){
-                    items(tags){ tag ->
-                        Row(
-                            modifier = modifier
-                                .padding(spacer.spaceExtraSmall)
-                                .clickable {
-                                    isShowDialog = false
-                                    onTagItemClicked(tag)
-                                },
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(
-                                        color = Color(tag.color),
-                                        shape = CircleShape
-                                    )
-                            )
-                            Spacer(modifier = Modifier.width(spacer.spaceExtraSmall))
-                            Text(text = tag.name)
-                        }
+                items(
+                    items = tags,
+                    key = {
+                        it.id?:0
                     }
-                    item {
-                        Row(
-                            modifier = modifier,
-                            horizontalArrangement = Arrangement.Center
-                        ){
-                            IconButton(
-                                modifier = Modifier.weight(1f),
-                                onClick = {
-                                isShowDialog = false
-                                onAddTagClicked()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = "TagAdd"
+                ){ tag ->
+                    Row(
+                        modifier = modifier
+                            .padding(spacer.spaceExtraSmall)
+                            .clickable {
+                                onTagItemClicked(tag)
+                            },
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .background(
+                                    color = Color(tag.color),
+                                    shape = CircleShape
                                 )
-                            }
-                        }
+                        )
+                        Spacer(modifier = Modifier.width(spacer.spaceExtraSmall))
+                        Text(text = tag.name)
                     }
                 }
-
             }
-        }
 
+        }
     }
 }
