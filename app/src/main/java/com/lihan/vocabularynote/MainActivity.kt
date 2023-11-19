@@ -155,29 +155,7 @@ class MainActivity : ComponentActivity() {
                                 val state = viewModel.storageState
                                 val uiEvent = viewModel.uiEvent
                                 StorageScreen(
-                                    onCloseButtonClicked = {
-                                        navController.navigate(
-                                            route = Route.HOME,
-                                            navOptions = NavOptions.Builder().setPopUpTo(
-                                                route = Route.HOME,
-                                                inclusive = true,
-                                                saveState = false
-                                            ).build()
-                                        )
-                                    },
-                                    onEditStorageClicked = {
-                                        navController.navigate(
-                                            route = Route.STORAGE_EDIT + "/${
-                                                Uri.encode(
-                                                    Gson().toJson(
-                                                        it
-                                                    )
-                                                )
-                                            }"
-                                        )
-                                    },
-                                    storageState = state,
-                                    uiEvent = uiEvent,
+                                    state = state,
                                     onEvent = viewModel::onEvent
                                 )
                             }

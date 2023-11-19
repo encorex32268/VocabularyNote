@@ -50,6 +50,14 @@ fun HomeScreen(
     Column (
             modifier = modifier.fillMaxSize()
     ){
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            TitleText(
+                modifier = Modifier.weight(1f),
+                text = stringResource(id = com.lihan.vocabularynote.R.string.home)
+            )
+        }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -135,11 +143,8 @@ fun HomeScreenPreView(){
                     )
                 ),
                 storages = listOf(),
-                spinnerSelected = "WEWER",
                 isHintVisible = false,
-                searchText = "Box",
-                userName = "Test",
-                userIcon = User.icons[1]
+                searchText = "Box"
             ),
             onEvent = {},
             onNewNoteButtonClicked = {_->}

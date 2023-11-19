@@ -1,20 +1,14 @@
 package com.lihan.vocabularynote.feature.tag.presentations
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.relocation.bringIntoViewRequester
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -35,17 +29,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -63,8 +54,8 @@ import com.google.accompanist.insets.imePadding
 import com.google.accompanist.insets.navigationBarsPadding
 import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.presentations.componets.TitleText
+import com.lihan.vocabularynote.core.presentations.componets.VocabularyTextField
 import com.lihan.vocabularynote.core.ui.LocalSpacing
-import com.lihan.vocabularynote.feature.storage.presentations.edit.StorageEditEvent
 import com.lihan.vocabularynote.feature.tag.domain.model.Tag
 import com.lihan.vocabularynote.feature.tag.presentations.components.TagCard
 import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
@@ -117,7 +108,7 @@ fun TagScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(spacer.spaceSmall))
-                LazyVerticalGrid(cells = GridCells.Fixed(4)){
+                LazyVerticalGrid(columns = GridCells.Fixed(4)){
                     items(tagState.tags){ item->
                         TagCard(
                             tag = item,
@@ -280,49 +271,22 @@ private fun InsertTagDialog(
                     )
                 )
                 Spacer(modifier = Modifier.width(LocalSpacing.current.spaceLarge))
-                BasicTextField(
-                    textStyle = TextStyle(textAlign = TextAlign.Center),
-                    value = insertTagText,
+                VocabularyTextField(
+                    text =insertTagText,
                     onValueChange = {
                         insertTagText = it
                     },
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                            focusManager.clearFocus(true)
-                            defaultKeyboardAction(ImeAction.Done)
-                        }
-                    ),
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done
-                    ),
-                    modifier = Modifier
-                        .padding(
-                            top = spacer.spaceMedium,
-                            bottom = spacer.spaceMedium
-                        )
-                        .clip(RoundedCornerShape(5.dp))
-                        .shadow(
-                            elevation = 2.dp,
-                            shape = RoundedCornerShape(5.dp)
-                        )
-                        .background(MaterialTheme.colors.surface)
-                        .wrapContentWidth(Alignment.CenterHorizontally)
-                        .border(
-                            width = 1.dp,
-                            color = Color.Black,
-                            shape = RoundedCornerShape(5.dp)
-                        )
-                        .padding(spacer.spaceMedium)
-                        .navigationBarsPadding()
-                        .imePadding()
+                    onDone = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus(true) }
                 )
 
             }
             val isColorDark = ColorUtils.calculateLuminance(selectColor.color.toArgb()) < 0.25
             Button(
-                modifier = Modifier.align(Alignment.End).padding(end = spacer.spaceSmall),
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(end = spacer.spaceSmall),
                 onClick = {
                     onEvent(TagEvent.InertTag(
                         Tag(

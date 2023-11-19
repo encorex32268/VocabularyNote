@@ -104,6 +104,7 @@ fun VocabularyNoteItem(
                     )
 
                 }
+
                 if (isShowEdit){
                    IconButton(
                        modifier = Modifier.align(Alignment.TopEnd),

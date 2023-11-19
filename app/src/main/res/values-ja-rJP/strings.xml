@@ -7,6 +7,7 @@
     <string name="home_all_storage">全部</string>
     <string name="storage">ストレージ</string>
     <string name="storage_search_storage">捜索</string>
+    <string name="storage_empty_data">なし</string>
     <string name="storage_add">追加する</string>
     <string name="storage_add_title">新しいストレージ</string>
     <string name="storage_add_description">説明</string>

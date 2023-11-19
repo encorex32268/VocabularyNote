@@ -25,7 +25,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val vocabularyNoteUseCases: VocabularyNoteUseCases,
     private val storageUseCases: StorageUseCases,
-    private val preferences: Preferences
 ) : ViewModel() {
 
     var state by mutableStateOf(HomeState())
@@ -34,10 +33,6 @@ class HomeViewModel @Inject constructor(
     init {
         onEvent(HomeEvent.GetAllStorage)
         onEvent(HomeEvent.GetAllVocabularyNotes)
-        state = state.copy(
-            userIcon = preferences.getUserIcon(),
-            userName = preferences.getUserName()
-        )
         if (state.storages.isNotEmpty()){
             onEvent(HomeEvent.GetNotesByStorageId(storageId = state.storages[0].storageId))
         }
@@ -54,15 +49,15 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
-            is HomeEvent.GetNotesByStorageId -> {
-                viewModelScope.launch {
-                    vocabularyNoteUseCases.getVocabularyByStorageId(event.storageId).collectLatest {
-                        state = state.copy(
-                            notes = it
-                        )
-                    }
-                }
-            }
+//            is HomeEvent.GetNotesByStorageId -> {
+//                viewModelScope.launch {
+//                    vocabularyNoteUseCases.getVocabularyByStorageId(event.storageId).collectLatest {
+//                        state = state.copy(
+//                            notes = it
+//                        )
+//                    }
+//                }
+//            }
             is HomeEvent.SearchByString ->{
                 if (event.string.isNotBlank()){
                     viewModelScope.launch {
@@ -100,24 +95,6 @@ class HomeViewModel @Inject constructor(
                         )
                     }
                 }
-            }
-            is HomeEvent.SaveUserName->{
-                state = state.copy(
-                    userName = event.name
-                )
-                preferences.saveUserName(event.name)
-            }
-            is HomeEvent.SaveUserIcon->{
-                val newUserIcon = User.icons.filter { it != event.resId }.random()
-                state = state.copy(
-                    userIcon = newUserIcon
-                )
-                preferences.saveUserIcon(newUserIcon)
-            }
-            is HomeEvent.SpinnerStorageChanged->{
-                state = state.copy(
-                    showingStorage = event.storage
-                )
             }
 
         }

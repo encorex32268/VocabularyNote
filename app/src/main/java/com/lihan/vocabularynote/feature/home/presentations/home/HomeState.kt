@@ -7,10 +7,6 @@ import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 data class HomeState(
     val notes : List<VocabularyNote> = emptyList(),
     val storages : List<Storage> = emptyList(),
-    val showingStorage : Storage ?=null,
-    val spinnerSelected : String = "",
     val searchText : String = "",
-    val isHintVisible : Boolean = false,
-    val userName : String = "",
-    val userIcon : Int = User.icons[0],
+    val isHintVisible : Boolean = false
 )

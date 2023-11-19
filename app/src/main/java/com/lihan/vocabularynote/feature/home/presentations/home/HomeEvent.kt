@@ -8,7 +8,4 @@ sealed class HomeEvent{
     data class SearchByString(val string : String) : HomeEvent()
     data class ChangeHintVisible(val visible: Boolean) : HomeEvent()
     data class GetNotesByStorageId(val storageId : Int) : HomeEvent()
-    data class SaveUserName(val name : String) : HomeEvent()
-    data class SaveUserIcon(val resId : Int) : HomeEvent()
-    data class SpinnerStorageChanged(val storage: Storage?) : HomeEvent()
 }

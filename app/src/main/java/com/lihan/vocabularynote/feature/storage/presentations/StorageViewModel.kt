@@ -7,7 +7,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lihan.vocabularynote.R
+import com.lihan.vocabularynote.core.util.Resource
 import com.lihan.vocabularynote.core.util.UiEvent
+import com.lihan.vocabularynote.feature.home.domain.use_cases.VocabularyNoteUseCases
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 import com.lihan.vocabularynote.feature.storage.domain.use_cases.StorageUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,11 +26,14 @@ import javax.inject.Inject
 @HiltViewModel
 class StorageViewModel @Inject constructor(
     private val storageUseCases: StorageUseCases,
+    private val vocabularyNoteUseCases : VocabularyNoteUseCases
 )  : ViewModel(){
 
     private var getStoragesJob: Job? = null
 
     var storageState by mutableStateOf(StorageState())
+        private set
+
     private val _uiEvent  = Channel<UiEvent>()
     var uiEvent = _uiEvent.receiveAsFlow()
 
@@ -73,6 +78,16 @@ class StorageViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.Success)
                 }
                 refreshData()
+            }
+            is StorageEvent.GetNotesByStorageId->{
+                viewModelScope.launch {
+                    vocabularyNoteUseCases.getVocabularyByStorageId(event.storageId).collectLatest {
+                        storageState = storageState.copy(
+                            notes = it
+                        )
+                    }
+
+                }
             }
         }
     }

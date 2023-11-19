@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace 'com.lihan.vocabularynote'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.lihan.vocabularynote"
@@ -122,4 +122,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test:core-ktx:1.4.0'
     androidTestImplementation 'androidx.test:runner:1.4.0'
+
+    implementation 'androidx.compose.foundation:foundation:1.4.0-alpha03'
+
+
 }

@@ -8,4 +8,6 @@ sealed class StorageEvent{
     data class SearchStorage(val text : String ) : StorageEvent()
     data class ChangeHintVisible(val visible: Boolean) : StorageEvent()
 
+    data class GetNotesByStorageId(val storageId : Int) : StorageEvent()
+
 }
