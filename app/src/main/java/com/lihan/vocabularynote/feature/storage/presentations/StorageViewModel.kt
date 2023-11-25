@@ -89,6 +89,17 @@ class StorageViewModel @Inject constructor(
 
                 }
             }
+            is StorageEvent.DeleteStorage->{
+                viewModelScope.launch {
+                    storageUseCases.deleteStorage.invoke(event.storageId)
+                    vocabularyNoteUseCases.deleteVocabularyNoteByStorageId.invoke(event.storageId)
+                }
+            }
+            is StorageEvent.DeleteVocabulary->{
+                viewModelScope.launch {
+                    vocabularyNoteUseCases.deleteVocabularyNote.invoke(event.id)
+                }
+            }
         }
     }
 

@@ -39,7 +39,6 @@ class HomeViewModel @Inject constructor(
         if (state.storages.isNotEmpty()){
             onEvent(HomeEvent.GetNotesByStorageId(storageId = state.storages[0].storageId))
         }
-
     }
     fun onEvent(event: HomeEvent) {
         when (event) {
@@ -66,15 +65,11 @@ class HomeViewModel @Inject constructor(
                     vocabularyNoteUseCases.insertEditVocabularyNote.invoke(event.vocabularyNote)
                 }
             }
-//            is HomeEvent.GetNotesByStorageId -> {
-//                viewModelScope.launch {
-//                    vocabularyNoteUseCases.getVocabularyByStorageId(event.storageId).collectLatest {
-//                        state = state.copy(
-//                            notes = it
-//                        )
-//                    }
-//                }
-//            }
+            is HomeEvent.DeleteVocabulary->{
+                viewModelScope.launch {
+                    vocabularyNoteUseCases.deleteVocabularyNote.invoke(event.noteId)
+                }
+            }
             is HomeEvent.SearchByString ->{
                 if (event.string.isNotBlank()){
                     viewModelScope.launch {

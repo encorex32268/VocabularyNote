@@ -12,4 +12,5 @@ sealed class HomeEvent{
     data class GetNotesByStorageId(val storageId : Int) : HomeEvent()
 
     data class InsertVocabulary(val vocabularyNote: VocabularyNote) : HomeEvent()
+    data class DeleteVocabulary(val noteId : Int) : HomeEvent()
 }

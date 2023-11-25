@@ -9,5 +9,7 @@ sealed class StorageEvent{
     data class ChangeHintVisible(val visible: Boolean) : StorageEvent()
 
     data class GetNotesByStorageId(val storageId : Int) : StorageEvent()
+    data class DeleteStorage(val storageId : Int) : StorageEvent()
+    data class DeleteVocabulary(val id : Int) : StorageEvent()
 
 }

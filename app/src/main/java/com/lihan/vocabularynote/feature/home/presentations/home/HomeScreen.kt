@@ -2,6 +2,7 @@ package com.lihan.vocabularynote.feature.home.presentations.home
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -20,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Card
@@ -28,11 +30,16 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
@@ -62,11 +69,13 @@ import com.lihan.vocabularynote.feature.home.presentations.add.components.TagDia
 import com.lihan.vocabularynote.feature.home.presentations.home.components.VocabularyNoteItem
 import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 import com.lihan.vocabularynote.feature.storage.presentations.StorageEvent
+import com.lihan.vocabularynote.feature.tag.domain.model.Tag
 import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.Instant
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable
@@ -82,7 +91,12 @@ fun HomeScreen(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     )
     val scope = rememberCoroutineScope()
-
+    var isShowDeleteNote by remember {
+        mutableStateOf(false)
+    }
+    var selectedNote by remember {
+        mutableStateOf<VocabularyNote?>(null)
+    }
     BottomSheetScaffold(
         scaffoldState = bottomScaffold,
         sheetPeekHeight = 0.dp,
@@ -99,76 +113,106 @@ fun HomeScreen(
             )
         }
     ) {
-        Column (
-            modifier = modifier
-                .fillMaxSize()
-                .padding(it)
+        Box(modifier = modifier
+            .fillMaxSize()
+            .padding(it)
         ){
-            Row(
-                modifier = Modifier.fillMaxWidth(),
+            Scaffold(
+                floatingActionButton = {
+                    FloatingActionButton(onClick = {
+                        scope.launch {
+                            if (bottomScaffold.bottomSheetState.isCollapsed){
+                                bottomScaffold.bottomSheetState.expand()
+                            }else{
+                                bottomScaffold.bottomSheetState.collapse()
+                            }
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Add,
+                            contentDescription = null
+                        )
+                    }
+                }
             ) {
-                TitleText(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(id = com.lihan.vocabularynote.R.string.home)
-                )
-                IconButton(
-                    modifier = Modifier.padding(end = spacer.spaceSmall),
-                    onClick = {
-                    scope.launch {
-                        if (bottomScaffold.bottomSheetState.isCollapsed){
-                            bottomScaffold.bottomSheetState.expand()
-                        }else{
-                            bottomScaffold.bottomSheetState.collapse()
+                Column (
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        TitleText(
+                            modifier = Modifier.weight(1f),
+                            text = stringResource(id = com.lihan.vocabularynote.R.string.home)
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                start = spacer.spaceMedium,
+                                end = spacer.spaceMedium,
+                                top = spacer.spaceMedium
+                            ),
+                    ) {
+                        SearchBar(
+                            modifier = Modifier.fillMaxWidth() ,
+                            onValueChange = {
+                                onEvent(HomeEvent.SearchByString(it))
+                            },
+                            onSearch = {
+                                keyboardController?.hide()
+                                focusManager.clearFocus()
+                                onEvent(HomeEvent.SearchByString(state.searchText))
+                            },
+                            text = state.searchText,
+                            onFocusChanged = {
+                                onEvent(HomeEvent.ChangeHintVisible(it.isFocused))
+                            },
+                            shouldShowHint = state.isHintVisible,
+                            hintText = stringResource(id = R.string.home_search_vocabulary)
+                        )
+
+                    }
+                    Spacer(modifier = Modifier.height(spacer.spaceExtraSmall))
+                    LazyColumn{
+                        items(
+                            items = state.notes,
+                            key = {
+                                it.id?:0
+                            }
+                        ){note ->
+                            VocabularyNoteItem(
+                                vocabularyNote = note,
+                                onItemClick = {},
+                                onLongClick = {
+                                    selectedNote = note
+                                    isShowDeleteNote = true
+                                }
+                            )
+
                         }
                     }
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.AddCircle,
-                        contentDescription = null
-                    )
+
                 }
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        start = spacer.spaceMedium,
-                        end = spacer.spaceMedium,
-                        top = spacer.spaceMedium
-                    ),
-            ) {
-                SearchBar(
-                    modifier = Modifier.fillMaxWidth() ,
-                    onValueChange = {
-                        onEvent(HomeEvent.SearchByString(it))
-                    },
-                    onSearch = {
-                        keyboardController?.hide()
-                        focusManager.clearFocus()
-                        onEvent(HomeEvent.SearchByString(state.searchText))
-                    },
-                    text = state.searchText,
-                    onFocusChanged = {
-                        onEvent(HomeEvent.ChangeHintVisible(it.isFocused))
-                    },
-                    shouldShowHint = state.isHintVisible,
-                    hintText = stringResource(id = R.string.home_search_vocabulary)
-                )
 
             }
-            Spacer(modifier = Modifier.height(spacer.spaceExtraSmall))
-            LazyColumn{
-                items(
-                    items = state.notes,
-                    key = {
-                        it.id?:0
-                    }
-                ){note ->
-                    VocabularyNoteItem(
-                        vocabularyNote = note,
-                        onItemClick = {}
+            if (isShowDeleteNote){
+                selectedNote?.let {
+                    DeleteNoteDialog(
+                        id = it.id,
+                        onDismiss = {
+                            selectedNote  = null
+                        },
+                        onOkClick = {
+                            it.id?.let { id ->
+                                onEvent(HomeEvent.DeleteVocabulary(id))
+                                isShowDeleteNote = false
+
+                            }
+
+                        }
                     )
-
                 }
             }
 
@@ -188,44 +232,91 @@ fun HomeScreen(
 }
 
 @Composable
+private fun DeleteNoteDialog(
+    id : Int?=null,
+    onDismiss: () -> Unit = {},
+    onOkClick : () -> Unit = {}
+){
+    id?.let {
+        AlertDialog(
+            onDismissRequest = {
+                onDismiss()
+            },
+            title = {
+                Text(text = stringResource(id = R.string.storage_edit_delete_dialog_title))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onOkClick()
+                    onDismiss()
+                }) {
+                    Text(text = stringResource(id = R.string.storage_edit_delete_dialog_OK_button))
+                }
+            },
+            text = {
+                Text(text = stringResource(id = R.string.storage_edit_delete_dialog_message))
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    onDismiss()
+                }) {
+                    Text(text = stringResource(id = R.string.storage_edit_delete_dialog_cancel_button))
+                }
+            }
+        )
+    }
+}
+
+@Composable
 private fun StoragesContent(
     modifier: Modifier = Modifier,
     items : List<Storage> = emptyList(),
     onClick : (Storage) -> Unit = {},
-    selectedItem : Storage?
+    selectedItem : Storage?,
+    onDismiss : () -> Unit = {}
 ) {
     val spacer = LocalSpacing.current
-    LazyRow(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = spacer.spaceSmall
+    Column {
+        IconButton(
+            modifier = Modifier.align(Alignment.End),
+            onClick = { onDismiss() }) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = null
             )
-    ){
-        items(
-            items,
-            key = {
-                it.hashCode()
-            }
-        ){ storage ->
-            Card(
-                modifier = Modifier
-                    .padding(spacer.spaceSmall)
-                    .clickable {
-                        onClick(storage)
-                    }
-                ,
-                shape = RoundedCornerShape(8.dp),
-                backgroundColor = if (selectedItem?.storageId == storage.storageId) Color.Black else Color.White,
-                border = BorderStroke(
-                    width = 1.dp, color = Color.Black
+        }
+        LazyRow(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = spacer.spaceSmall
                 )
-            ) {
-                Text(
-                    modifier = Modifier.padding(spacer.spaceExtraSmall),
-                    text = storage.name,
-                    color = if (selectedItem?.storageId == storage.storageId) Color.White else Color.Black
-                )
+        ){
+            items(
+                items,
+                key = {
+                    it.hashCode()
+                }
+            ){ storage ->
+                Card(
+                    modifier = Modifier
+                        .padding(spacer.spaceSmall)
+                        .clickable {
+                            onClick(storage)
+                        }
+                    ,
+                    shape = RoundedCornerShape(8.dp),
+                    backgroundColor = if (selectedItem?.storageId == storage.storageId) Color.Black else Color.White,
+                    border = BorderStroke(
+                        width = 1.dp, color = Color.Black
+                    )
+                ) {
+                    Text(
+                        modifier = Modifier.padding(spacer.spaceMedium),
+                        text = storage.name.trim(),
+                        color = if (selectedItem?.storageId == storage.storageId) Color.White else Color.Black
+                    )
+                }
             }
         }
     }
@@ -272,7 +363,8 @@ private fun VocabularyInsertContent(
                 onClick = {
                     selectedStorage = it
                 },
-                selectedItem = selectedStorage
+                selectedItem = selectedStorage,
+                onDismiss = onDismiss
             )
             Box(
                 modifier = Modifier
@@ -429,6 +521,7 @@ private fun VocabularyInsertContent(
 }
 
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Preview

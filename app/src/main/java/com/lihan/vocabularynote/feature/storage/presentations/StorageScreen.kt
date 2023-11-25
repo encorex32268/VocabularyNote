@@ -1,64 +1,54 @@
 package com.lihan.vocabularynote.feature.storage.presentations
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.lihan.vocabularynote.R
 import com.lihan.vocabularynote.core.presentations.componets.TitleText
-import com.lihan.vocabularynote.core.navigation.Route
-import com.lihan.vocabularynote.core.ui.LocalSpacing
-import com.lihan.vocabularynote.core.presentations.componets.SearchBar
 import com.lihan.vocabularynote.core.presentations.componets.VocabularyTextField
-import com.lihan.vocabularynote.core.util.UiEvent
-import com.lihan.vocabularynote.feature.home.presentations.home.HomeEvent
+import com.lihan.vocabularynote.core.ui.LocalSpacing
+import com.lihan.vocabularynote.feature.home.domain.model.VocabularyNote
 import com.lihan.vocabularynote.feature.home.presentations.home.components.VocabularyNoteItem
-import com.lihan.vocabularynote.feature.storage.domain.mode.Storage
 import com.lihan.vocabularynote.ui.theme.VocabularyNoteTheme
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
 @ExperimentalComposeUiApi
@@ -70,6 +60,18 @@ fun StorageScreen(
     val spacer = LocalSpacing.current
     var isShowAddNewStorage by remember{
         mutableStateOf(false)
+    }
+    var isShowDeleteStorage by remember {
+        mutableStateOf(false)
+    }
+    var selectedStorageId by remember {
+        mutableStateOf<Int?>(null)
+    }
+    var isShowDeleteNote by remember {
+        mutableStateOf(false)
+    }
+    var selectedNote by remember {
+        mutableStateOf<VocabularyNote?>(null)
     }
     Scaffold(
         floatingActionButton = {
@@ -112,50 +114,48 @@ fun StorageScreen(
                         Card(
                             modifier = Modifier
                                 .padding(spacer.spaceSmall)
-                                .clickable(
+                                .combinedClickable(
                                     onClick = {
+                                        selectedStorageId = it.storageId
                                         onEvent(StorageEvent.GetNotesByStorageId(it.storageId))
+                                    },
+                                    onLongClick = {
+                                        selectedStorageId = it.storageId
+                                        isShowDeleteStorage = true
                                     }
                                 )
                             ,
                             shape = RoundedCornerShape(8.dp),
-                            backgroundColor = Color.White,
+                            backgroundColor =  if (selectedStorageId == it.storageId) Color.Black else Color.White,
                             border = BorderStroke(
-                                width = 1.dp, color = Color.Black
+                                width = 1.dp, color =  Color.Black
                             )
                         ) {
                             Text(
-                                modifier = Modifier.padding(spacer.spaceExtraSmall),
-                                text = it.name
+                                modifier = Modifier.padding(spacer.spaceSmall),
+                                text = it.name,
+                                color = if (selectedStorageId == it.storageId) Color.White else Color.Black
                             )
                         }
                     }
                 }
                 Spacer(modifier = Modifier.height(spacer.spaceMedium))
-                if (state.notes.isEmpty()){
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                LazyColumn{
+                    items(
+                        items = state.notes,
+                        key = {
+                            it.hashCode()
+                        }
                     ){
-                        Text(
-                            text = stringResource(id = R.string.storage_empty_data)
+                        VocabularyNoteItem(
+                            vocabularyNote = it,
+                            onItemClick = {},
+                            onLongClick = {
+                                selectedNote = it
+                                isShowDeleteNote = true
+                            }
                         )
                     }
-                }else{
-                    LazyColumn{
-                        items(
-                            state.notes,
-                            key = {
-                                it.hashCode()
-                            }
-                        ){
-                            VocabularyNoteItem(
-                                vocabularyNote = it,
-                                onItemClick = {}
-                            )
-                        }
-                    }
-
                 }
             }
             if (isShowAddNewStorage){
@@ -170,6 +170,38 @@ fun StorageScreen(
                         )
                     }
                 )
+            }
+            if (isShowDeleteStorage){
+                DeleteStorageDialog(
+                    onDismiss = {
+                        isShowDeleteStorage = false
+                                },
+                    onOkClick = {
+                        selectedStorageId = null
+                        onEvent(
+                            StorageEvent.DeleteStorage(it)
+                        )
+                    },
+                    storageId = selectedStorageId
+                )
+            }
+            if (isShowDeleteNote){
+                selectedNote?.let {
+                    DeleteNoteDialog(
+                        id = it.id,
+                        onDismiss = {
+                            selectedNote  = null
+                        },
+                        onOkClick = {
+                            it.id?.let { id ->
+                                onEvent(StorageEvent.DeleteVocabulary(id))
+                                isShowDeleteNote = false
+
+                            }
+
+                        }
+                    )
+                }
             }
         }
 
@@ -250,6 +282,79 @@ private fun AddNewStorageDialog(
     }
 
 }
+
+@Composable
+private fun DeleteNoteDialog(
+    id : Int?=null,
+    onDismiss: () -> Unit = {},
+    onOkClick : () -> Unit = {}
+){
+    id?.let {
+        AlertDialog(
+            onDismissRequest = {
+                onDismiss()
+            },
+            title = {
+                Text(text = stringResource(id = R.string.storage_edit_delete_dialog_title))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onOkClick()
+                    onDismiss()
+                }) {
+                    Text(text = stringResource(id = R.string.storage_edit_delete_dialog_OK_button))
+                }
+            },
+            text = {
+                Text(text = stringResource(id = R.string.storage_edit_delete_dialog_message))
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    onDismiss()
+                }) {
+                    Text(text = stringResource(id = R.string.storage_edit_delete_dialog_cancel_button))
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun DeleteStorageDialog(
+    storageId : Int?=null,
+    onDismiss: () -> Unit = {},
+    onOkClick : (Int) -> Unit = {}
+){
+    storageId?.let {
+        AlertDialog(
+            onDismissRequest = {
+                onDismiss()
+            },
+            title = {
+                Text(text = stringResource(id = R.string.storage_edit_delete_dialog_title))
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    onOkClick(storageId)
+                    onDismiss()
+                }) {
+                    Text(text = stringResource(id = R.string.storage_edit_delete_dialog_OK_button))
+                }
+            },
+            text = {
+                Text(text = stringResource(id = R.string.storage_edit_delete_dialog_message))
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    onDismiss()
+                }) {
+                    Text(text = stringResource(id = R.string.storage_edit_delete_dialog_cancel_button))
+                }
+            }
+        )
+    }
+}
+
 
 
 

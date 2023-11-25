@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -34,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import com.lihan.vocabularynote.core.ui.LocalSpacing
 import com.lihan.vocabularynote.feature.home.domain.model.VocabularyNote
 
+@ExperimentalFoundationApi
 @Composable
 fun VocabularyNoteItem(
     modifier: Modifier = Modifier,
@@ -45,7 +48,8 @@ fun VocabularyNoteItem(
     wordFontSize: TextUnit = 30.sp,
     explainFontSize: TextUnit = 18.sp,
     isShowEdit: Boolean = false,
-    onEditClick: (() -> Unit?)? =null
+    onEditClick: (() -> Unit?)? =null,
+    onLongClick : () ->Unit = {}
 ) {
     val spacer = LocalSpacing.current
     var rotated by remember {
@@ -73,9 +77,14 @@ fun VocabularyNoteItem(
                     rotationY = rotation
                     cameraDistance = 8 * density
                 }
-                .clickable {
-                    rotated = !rotated
-                },
+                .combinedClickable(
+                    onClick = {
+                        rotated = !rotated
+                    },
+                    onLongClick = {
+                        onLongClick()
+                    }
+                ),
             contentAlignment = Alignment.Center
 
         ) {
