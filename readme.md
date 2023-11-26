@@ -3,11 +3,12 @@
 
 ## Screenshots
 
-![App Screenshot Home](https://github.com/encorex32268/VocabularyNote/blob/main/HomePage.png)
-![App Screenshot Storage](https://github.com/encorex32268/VocabularyNote/blob/main/StoragePage.png)
-![App Screenshot Tag](https://github.com/encorex32268/VocabularyNote/blob/main/TagPage.png)
-![App Screenshot NoteInsert](https://github.com/encorex32268/VocabularyNote/blob/main/NoteInsertDialog.png)
-![App Screenshot NewTag](https://github.com/encorex32268/VocabularyNote/blob/main/NewTagPage.png)
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/HomePage.png" alt="drawing" height="300" width="300"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/StoragePage.png" alt="drawing" height="300" width="300"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/TagPage.png" alt="drawing" height="300" width="300"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/NoteInsertDialog.png" alt="drawing" height="300" width="300"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/NewTagPage.png" alt="drawing" height="300" width="300"/>
+
 
 
 
