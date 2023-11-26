@@ -38,4 +38,14 @@ class FakeVocabularyNoteRepository : VocabularyNoteRepository {
     override fun getVocabularyByStorageId(storageId: Int): Flow<List<VocabularyNote>> {
         return flow { emit(vocabularyNotes.filter { it.storageId == storageId }) }
     }
+
+    override fun getVocabularyByText(text: String): Flow<List<VocabularyNote>> {
+        return flow {
+            emit(
+                vocabularyNotes.filter {
+                    it.hiraganaOrKatakana == text
+                }
+            )
+        }
+    }
 }

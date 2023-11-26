@@ -1,4 +1,16 @@
 
+# VocabularyNote App
+
+## Screenshots
+
+![App Screenshot Home](https://github.com/encorex32268/VocabularyNote/blob/main/HomePage.png)
+![App Screenshot Storage](https://github.com/encorex32268/VocabularyNote/blob/main/StoragePage.png)
+![App Screenshot Tag](https://github.com/encorex32268/VocabularyNote/blob/main/TagPage.png)
+![App Screenshot NoteInsert](https://github.com/encorex32268/VocabularyNote/blob/main/NoteInsertDialog.png)
+![App Screenshot NewTag](https://github.com/encorex32268/VocabularyNote/blob/main/NewTagPage.png)
+
+
+
 # Dependencies
 
 
