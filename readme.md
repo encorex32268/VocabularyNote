@@ -3,11 +3,11 @@
 
 ## Screenshots
 
-<img src="https://github.com/encorex32268/VocabularyNote/blob/main/HomePage.png" alt="drawing" height="300" width="300"/>
-<img src="https://github.com/encorex32268/VocabularyNote/blob/main/StoragePage.png" alt="drawing" height="300" width="300"/>
-<img src="https://github.com/encorex32268/VocabularyNote/blob/main/TagPage.png" alt="drawing" height="300" width="300"/>
-<img src="https://github.com/encorex32268/VocabularyNote/blob/main/NoteInsertDialog.png" alt="drawing" height="300" width="300"/>
-<img src="https://github.com/encorex32268/VocabularyNote/blob/main/NewTagPage.png" alt="drawing" height="300" width="300"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/HomePage.png" alt="drawing" height="400" width="200"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/StoragePage.png" alt="drawing" height="400" width="200"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/TagPage.png" alt="drawing" height="400" width="200"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/NoteInsertDialog.png" alt="drawing" height="400" width="200"/>
+<img src="https://github.com/encorex32268/VocabularyNote/blob/main/NewTagPage.png" alt="drawing" height="400" width="200"/>
 
 
 
